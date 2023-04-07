@@ -4,14 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.romankh3</groupId>
-    <artifactId>maven-template-repository</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <groupId>com.pr0gger1</groupId>
+    <artifactId>sfedu-db-app</artifactId>
+    <version>0.1.0</version>
     <packaging>jar</packaging>
 
-    <name>Maven Repository Template</name>
+    <name>SFEDU Database Manager</name>
 
-    <url>https://github.com/template-repository/maven-template-repository</url>
+    <url>https://github.com/Pr0gger1/sfedu-db-app</url>
 
     <licenses>
         <license>
@@ -32,6 +32,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.6.0</version>
+        </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
@@ -71,7 +76,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${surefire.plugin.version}</version>
-            </plugin>
+            </plugin><plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><configuration><source>11</source><target>11</target></configuration></plugin>
         </plugins>
     </build>
 
