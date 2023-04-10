@@ -2,7 +2,7 @@ package com.pr0gger1.app.menu.commands;
 
 public abstract class Command {
     private final String commandTitle;
-    private final int commandId;
+    protected int commandId;
 
     protected Command(int id, String title) {
         this.commandTitle = title;
@@ -10,7 +10,7 @@ public abstract class Command {
     }
 
     public void execute() {}
-    public String getCommandTitle() {
+    public String getTitle() {
         return this.commandTitle;
     }
     public int getId() {

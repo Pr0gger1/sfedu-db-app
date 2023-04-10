@@ -5,10 +5,11 @@ import com.pr0gger1.app.menu.commands.read.*;
 
 public class ReadLevel extends Command {
     private final Command[] secondLevel = {
-        new GetFacultyStudents(1, "Список студентов факультета"),
-        new GetFacultyTeachers(2, "Список преподавателей факультета"),
-        new GetFacultyGroups(3,"Список групп факультета"),
-        new GetAllDirections(4,"Список всех направлений обучения"),
+        new GetFaculties(1, "Список факультетов"),
+        new GetFacultyStudents(2, "Список студентов факультета"),
+        new GetFacultyTeachers(3, "Список преподавателей факультета"),
+        new GetFacultyGroups(4,"Список групп факультета"),
+        new GetAllDirections(5,"Список всех направлений обучения"),
         new BackCommand()
     };
 
@@ -18,8 +19,9 @@ public class ReadLevel extends Command {
 
     @Override
     public void execute() {
+        Menu menu = new Menu();
         Menu.levelUp();
-        Menu.outMenu(secondLevel, "_".repeat(40));
+        menu.showMenu(secondLevel, "");
     }
 }
 

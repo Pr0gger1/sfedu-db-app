@@ -1,9 +1,6 @@
 package com.pr0gger1.app.menu.commands;
 import com.pr0gger1.app.menu.Menu;
-import com.pr0gger1.app.menu.commands.write.SetDirection;
-import com.pr0gger1.app.menu.commands.write.SetFacultyGroup;
-import com.pr0gger1.app.menu.commands.write.SetFacultyStudent;
-import com.pr0gger1.app.menu.commands.write.SetFacultyTeacher;
+import com.pr0gger1.app.menu.commands.write.*;
 
 public class WriteLevel extends Command {
     private final Command[] secondLevel = {
@@ -11,6 +8,7 @@ public class WriteLevel extends Command {
         new SetFacultyTeacher(2, "Добавить преподавателя"),
         new SetFacultyGroup(3, "Добавить группу"),
         new SetDirection(4, "Добавить направление подготовки"),
+        new SetFaculty(5, "Добавить факультет"),
         new BackCommand()
     };
     public WriteLevel(int id, String title) {
@@ -19,7 +17,9 @@ public class WriteLevel extends Command {
 
     @Override
     public void execute() {
+        Menu menu = new Menu();
         Menu.levelUp();
-        Menu.outMenu(secondLevel, "_".repeat(40));
+        menu.showMenu(secondLevel, "\n");
     }
+
 }

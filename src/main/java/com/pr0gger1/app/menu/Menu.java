@@ -4,12 +4,12 @@ import com.pr0gger1.app.menu.commands.*;
 import com.pr0gger1.app.menu.commands.DeleteLevel;
 import com.pr0gger1.app.menu.commands.ReadLevel;
 import com.pr0gger1.app.menu.commands.WriteLevel;
+
 import java.util.Scanner;
 
 public class Menu {
     private static byte level = 1;
-
-    private static final Command[] firstLevel = {
+    private final Command[] firstLevel = {
         new ReadLevel(1, "Чтение данных"),
         new WriteLevel(2, "Запись данных"),
         new DeleteLevel(3, "Удаление данных"),
@@ -17,8 +17,8 @@ public class Menu {
     };
 
 
-    public static void open() {
-        outMenu(
+    public void open() {
+        showMenu(
             firstLevel,
     "Вас приветствует менеджер базы данных ЮФУ" +
             "\nВыберите интересующую вас операцию:"
@@ -26,7 +26,7 @@ public class Menu {
     }
 
     public static void levelUp() {
-        byte maxLevel = 2;
+        byte maxLevel = 3;
         if (level < maxLevel)
             level++;
     }
@@ -38,33 +38,45 @@ public class Menu {
     }
 
 
-    public static void outMenu(Command[] commands, String message) {
+    public void showMenu(Command[] commands, String message) {
         Scanner scanner = new Scanner(System.in);
-        int menuValue;
-
         while (true) {
-            if (message.length() != 0)
-                System.out.println(message);
+            try {
+                if (message.length() != 0) {
+                    System.out.println(message);
+                }
 
-            // Вывод списка команд
-            for (Command command : commands)
-                System.out.printf("%d. - %s\n", command.getId(), command.getCommandTitle());
+                // Вывод списка команд
+                for (Command command : commands) {
+                    System.out.printf("%d. - %s\n", command.getId(), command.getTitle());
+                }
 
-            // Ввод команды
-            menuValue = scanner.nextInt();
+                // Ввод команды
+                int menuValue;
+                menuValue = scanner.nextInt();
 
-            if (menuValue == 0 && level > 1) {
-                levelDown();
-                break;
-            }
+                if (menuValue == 0) {
+                    if (level > 1)
+                        levelDown();
+                    break;
+                }
 
-
-            if (menuValue < commands.length)
-                for (Command command : commands)
-                    if (command.getId() == menuValue)
+                boolean foundCommand = false;
+                for (Command command : commands) {
+                    if (command.getId() == menuValue && command.getId() != 0) {
                         command.execute();
+                        foundCommand = true;
+                        break;
+                    }
+                }
 
-            else System.out.println("Неверная команда");
+                if (!foundCommand)
+                    System.out.println("Неверная команда");
+
+            } catch (Exception error) {
+                System.out.println(error.getMessage());
+                return;
+            }
         }
     }
 }
