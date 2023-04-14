@@ -1,66 +1,87 @@
 package com.pr0gger1.app.formatOut;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Table {
-    private ArrayList<String> columns = new ArrayList<>();
-    private final ArrayList<ArrayList<String>> rows = new ArrayList<>();
+    private ArrayList<Object> columns = new ArrayList<>();
+    private final ArrayList<ArrayList<Object>> rows = new ArrayList<>();
 
-
-
-    public Table(ArrayList<String> columns, ArrayList<ArrayList<String>> rows) {
+    public Table(ArrayList<Object> columns, ArrayList<ArrayList<Object>> rows) {
         this.columns.addAll(columns);
         this.rows.addAll(rows);
     }
 
-    public Table(ArrayList<String> columns) {
+    public Table(ArrayList<Object> columns) {
         this.columns = columns;
     }
 
-    public void addRow(ArrayList<String> row) {
-        // Если есть поля в таблице -> сравнить длину массива входной строки с массивом строк
-        if (rows.size() > 0 && row.size() == rows.get(0).size()) {
-            rows.add(row);
-            return;
-        }
-        rows.add(row);
+    public Table(String... columns) {
+        this.columns.addAll(Arrays.asList(columns));
     }
 
-    public void addRows(ArrayList<ArrayList<String>> newRows) {
-        if (rows.size() > 0 && newRows.get(0).size() == rows.get(0).size()) {
-            rows.addAll(newRows);
+    public void addRow(ArrayList<Object> row) {
+        // Если есть поля в таблице -> сравнить длину массива входной строки с массивом строк
+        // Иначе просто добавляем строку в таблицу
+        if (rows.size() > 0) {
+            if (row.size() == rows.get(0).size())
+                rows.add(row);
+            else
+                System.out.println("Количество элементов в строке превышает количество столбов");
+        }
+        else rows.add(row);
+    }
+
+    public void addRow(Object... rowData) {
+        if (rows.size() > 0) {
+            if (rowData.length == rows.get(0).size())
+                rows.add(new ArrayList<>(Arrays.asList(rowData)));
+            else System.out.println("Во входной строке больше строк, чем в существующих");
+        }
+        else rows.add(new ArrayList<>(Arrays.asList(rowData)));
+    }
+
+    public void addRows(ArrayList<ArrayList<Object>> newRows) {
+        if (rows.size() > 0) {
+            if (newRows.get(0).size() == rows.get(0).size())
+                rows.addAll(newRows);
+
+            else System.out.println("Строки больше, чем количество столбцов");
             return;
         }
         rows.addAll(newRows);
     }
 
-    public void printTable() {
+    public void addColumns(ArrayList<String> columns) throws Exception {
+        this.columns.addAll(columns);
+    }
+
+    public void addColumn(String column) {
+        this.columns.add(column);
+    }
+
+    public StringBuilder getTable() {
         int[] maxLengths = getRowMaxLength();
+        StringBuilder table = new StringBuilder();
+        StringBuilder horizontalBorder = getBorder(maxLengths);
 
-        StringBuilder horizontalBorder = new StringBuilder("+");
-        for (int maxLength : maxLengths) {
-            horizontalBorder.append("-".repeat(maxLength + 2)).append("+");
+        table.append(horizontalBorder).append("\n").append("| ");
+
+        for (int i = 0; i < columns.size(); i++)
+            table.append(String.format("%-" + (maxLengths[i] + 1) + "s| ", columns.get(i)));
+
+        table.append("\n").append(horizontalBorder);
+
+
+        for (ArrayList<Object> row : rows) {
+            table.append("\n| ");
+            for (int i = 0; i < row.size(); i++)
+                table.append(String.format("%-" + (maxLengths[i] + 1) + "s| ", row.get(i)));
+
+            table.append("\n").append(horizontalBorder);
         }
 
-        System.out.println(horizontalBorder);
-
-        System.out.print("| ");
-        for (int i = 0; i < columns.size(); i++) {
-            System.out.printf("%-" + (maxLengths[i] + 1) + "s| ", columns.get(i));
-        }
-        System.out.println();
-
-        System.out.println(horizontalBorder);
-
-        for (ArrayList<String> row : rows) {
-            System.out.print("| ");
-            for (int i = 0; i < row.size(); i++) {
-                System.out.printf("%-" + (maxLengths[i] + 1) + "s| ", row.get(i));
-            }
-            System.out.println();
-
-            System.out.println(horizontalBorder);
-        }
+        return table;
     }
 
     private int[] getRowMaxLength() {
@@ -68,12 +89,12 @@ public class Table {
 
         // учитываем длины заголовков колонок
         for (int i = 0; i < columns.size(); i++) {
-            maxLengths[i] = columns.get(i).length();
+            maxLengths[i] = columns.get(i).toString().length();
         }
 
-        for (ArrayList<String> row : rows) {
+        for (ArrayList<Object> row : rows) {
             for (int i = 0; i < row.size(); i++) {
-                int length = row.get(i).length();
+                int length = row.get(i).toString().length();
                 if (length > maxLengths[i]) {
                     maxLengths[i] = length;
                 }
@@ -82,25 +103,50 @@ public class Table {
 
         return maxLengths;
     }
-    public void addColumn(ArrayList<String> column) throws Exception {
-        columns.addAll(column);
-    }
 
-    private StringBuilder border() {
-        int[] maxLengths = getRowMaxLength();
-        StringBuilder horizontalBorder = new StringBuilder();
+    private StringBuilder getBorder(int[] rowMaxLengths) {
+        StringBuilder horizontalBorder = new StringBuilder("+");
+        for (int maxLength : rowMaxLengths) {
+            horizontalBorder.append("-".repeat(maxLength + 2)).append("+");
+        }
 
-        horizontalBorder.append("+");
-        horizontalBorder.append("+");
         return horizontalBorder;
     }
 
 
-    public ArrayList<String> getColumns() {
+    public ArrayList<Object> getColumns() {
         return columns;
     }
 
-    public ArrayList<ArrayList<String>> getRows() {
+    public ArrayList<ArrayList<Object>> getRows() {
         return rows;
+    }
+
+    public int getRowsCount() {
+        return rows.size();
+    }
+    public int getColumnsCount() {
+        return columns.size();
+    }
+
+    public boolean fieldExists(int field) {
+        for (ArrayList<Object> row : rows) {
+            if (row.contains(field))
+                return true;
+        }
+        return false;
+    }
+
+    public boolean fieldExists(String field) {
+        for (ArrayList<Object> row : rows) {
+            if (row.contains(field))
+                return true;
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return getTable().toString();
     }
 }

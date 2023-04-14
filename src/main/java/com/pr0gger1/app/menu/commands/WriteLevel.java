@@ -9,6 +9,7 @@ public class WriteLevel extends Command {
         new SetFacultyGroup(3, "Добавить группу"),
         new SetDirection(4, "Добавить направление подготовки"),
         new SetFaculty(5, "Добавить факультет"),
+        new SetSubject(6, "Добавить предмет"),
         new BackCommand()
     };
     public WriteLevel(int id, String title) {
@@ -19,7 +20,7 @@ public class WriteLevel extends Command {
     public void execute() {
         Menu menu = new Menu();
         Menu.levelUp();
-        menu.showMenu(secondLevel, "\n");
+        menu.showMenu(secondLevel, "");
     }
 
 }

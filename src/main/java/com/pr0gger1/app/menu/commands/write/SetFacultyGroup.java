@@ -1,13 +1,12 @@
 package com.pr0gger1.app.menu.commands.write;
 
+import com.pr0gger1.app.entities.Faculty;
+import com.pr0gger1.app.entities.StudentsGroup;
 import com.pr0gger1.app.menu.commands.Command;
-import com.pr0gger1.database.DataTables;
 import com.pr0gger1.database.Database;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
-import java.util.ArrayList;
 
 public class SetFacultyGroup extends Command {
     public SetFacultyGroup(int id, String title) {
@@ -16,55 +15,35 @@ public class SetFacultyGroup extends Command {
     @Override
     public void execute() {
         Scanner scanner = new Scanner(System.in);
+        Faculty faculty = new Faculty();
+        StudentsGroup newStudentsGroup = new StudentsGroup();
+
         try {
-            // загружаем факультеты из базы данных в список
-            ArrayList<Integer> facultyIds = new ArrayList<>();
-            ArrayList<String> facultyNames = new ArrayList<>();
-            ResultSet faculties = Database.getRow(DataTables.FACULTIES, "*", "");
-
-            while (faculties.next()) {
-                int facultyId = faculties.getInt("id");
-                String facultyName = faculties.getString("faculty_name");
-
-                facultyIds.add(facultyId);
-                facultyNames.add(facultyName);
-            }
-            faculties.close(); // закрываем ResultSet
-
             // выполняем цикл выбора факультета и добавления группы
-            int chosenId;
-            while (true) {
-                System.out.println("Выберите факультет (введите ID) или 0 для выхода:");
+            int chosenFacultyId = -1;
 
-                // выводим факультеты из списка
-                int count = facultyIds.size();
-                for (int i = 0; i < count; i++) {
-                    int facultyId = facultyIds.get(i);
+            if (faculty.getEntityTable().getRowsCount() > 0) {
+                while (chosenFacultyId != 0) {
+                    System.out.println("Выберите факультет (введите ID) или 0 для выхода:");
+                    faculty.printEntityTable();
+                    chosenFacultyId = scanner.nextInt();
 
-                    String facultyName = facultyNames.get(i);
-                    System.out.printf("%d\t%s\n", facultyId, facultyName);
+                    // проверяем, есть ли выбранный факультет в списке
+                    if (!faculty.getEntityTable().fieldExists(chosenFacultyId) && chosenFacultyId != 0) {
+                        System.out.println("Неверный ID");
+                        continue;
+                    }
+
+                    System.out.println("Введите название (номер) группы:");
+                    newStudentsGroup.groupName = scanner.next();
+
+                    newStudentsGroup.setFacultyId(chosenFacultyId);
+
+                    Database.createGroup(newStudentsGroup);
+                    System.out.println("Данные успешно добавлены");
                 }
-
-                chosenId = scanner.nextInt();
-                if (chosenId == 0)
-                    return;
-
-                // проверяем, есть ли выбранный факультет в списке
-                if (!facultyIds.contains(chosenId)) {
-                    System.out.println("Неверный ID!");
-                    continue;
-                }
-
-                // запрашиваем название группы и добавляем ее в базу данных
-                System.out.println("Введите название (номер) группы:");
-                String groupName = scanner.next();
-
-                String[] values = new String[] {"group_name", "faculty_id"};
-                String query = String.format("%s, %d", groupName, chosenId);
-                Database.createRow(DataTables.GROUPS.getTable(), values, query);
-
-                System.out.println("Данные успешно добавлены");
             }
+            else System.out.println("В базе данных отсутствуют факультеты");
         }
         catch (SQLException error) {
             System.out.println(error.getMessage());

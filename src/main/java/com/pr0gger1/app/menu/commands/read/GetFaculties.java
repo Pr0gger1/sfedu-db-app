@@ -7,8 +7,6 @@ import com.pr0gger1.database.Database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class GetFaculties extends Command {
     public GetFaculties(int id, String title) {
@@ -17,13 +15,7 @@ public class GetFaculties extends Command {
 
     @Override
     public void execute() {
-        ArrayList<String> facultyColumns = new ArrayList<>(Arrays.asList(
-                "Название", "Адрес", "Email", "Телефон"
-        ));
-
-        ArrayList<ArrayList<String>> facultyRows = new ArrayList<>();
-        Table facultyTable = new Table(facultyColumns);
-
+        Table facultyTable = new Table("Название", "Адрес", "Email", "Телефон");
         try {
             ResultSet faculties = Database.getRow(DataTables.FACULTIES, "*", "");
 
@@ -33,16 +25,10 @@ public class GetFaculties extends Command {
                 String email = faculties.getString("email");
                 long phone = faculties.getLong("phone");
 
-
-                ArrayList<String> row = new ArrayList<>(
-                    Arrays.asList(
-                        facultyName, address, email, String.valueOf(phone)
-                ));
-
-                facultyRows.add(row);
+                facultyTable.addRow(facultyName, address, email, String.valueOf(phone));
             }
-            facultyTable.addRows(facultyRows);
-            facultyTable.printTable();
+
+            System.out.println(facultyTable);
         }
         catch (SQLException error) {
             System.out.println(error.getMessage());
