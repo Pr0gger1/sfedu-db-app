@@ -26,7 +26,9 @@ public class SetFacultyTeacher extends Command {
 
                     System.out.println("Выберите факультет (выберите ID) или 0 для выхода");
                     faculty.printEntityTable();
+
                     chosenFacultyId = scanner.nextInt();
+                    scanner.nextLine();
 
                     // проверяем, есть ли выбранный факультет в таблице
                     if (!faculty.getEntityTable().fieldExists(chosenFacultyId) && chosenFacultyId != 0) {
@@ -37,13 +39,14 @@ public class SetFacultyTeacher extends Command {
                     Teacher newTeacher = new Teacher(chosenFacultyId);
 
                     System.out.println("Введите ФИО преподавателя: ");
-                    newTeacher.fullName = scanner.next();
+                    newTeacher.fullName = scanner.nextLine();
 
                     System.out.println("Введите зарплату: ");
                     newTeacher.salary = scanner.nextFloat();
+                    scanner.nextLine();
 
                     System.out.println("Введите специализацию: ");
-                    newTeacher.specialization = scanner.next();
+                    newTeacher.specialization = scanner.nextLine();
 
                     newTeacher.setBirthdayFromConsole();
 
@@ -57,8 +60,7 @@ public class SetFacultyTeacher extends Command {
             else System.out.println("В базе данных отсутствуют факультеты");
         }
         catch (SQLException error) {
-            System.out.println(error.getErrorCode());
-            System.out.println(error.getMessage());
+            error.printStackTrace();
         }
     }
 }

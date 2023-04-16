@@ -1,6 +1,7 @@
 package com.pr0gger1.app.menu.commands.read;
 
-import com.pr0gger1.app.formatOut.Table;
+import com.pr0gger1.app.ConsoleTable.Table;
+import com.pr0gger1.app.ConsoleTable.exceptions.TooManyRowsException;
 import com.pr0gger1.app.menu.commands.Command;
 import com.pr0gger1.database.DataTables;
 import com.pr0gger1.database.Database;
@@ -30,8 +31,8 @@ public class GetFaculties extends Command {
 
             System.out.println(facultyTable);
         }
-        catch (SQLException error) {
-            System.out.println(error.getMessage());
+        catch (SQLException | TooManyRowsException error) {
+            error.printStackTrace();
         }
     }
 }

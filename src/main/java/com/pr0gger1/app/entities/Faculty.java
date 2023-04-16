@@ -45,11 +45,11 @@ public class Faculty extends Entity {
     public String toString() {
         return String.format(
             "{\n" +
-            "\nfacultyId: %d," +
-            "\nfacultyName: %s" +
-            "\naddress: %s" +
-            "\nphone: %d" +
-            "\nemail: %s" +
+            "\n\tfacultyId: %d," +
+            "\n\tfacultyName: %s," +
+            "\n\taddress: %s," +
+            "\n\tphone: %d," +
+            "\n\temail: %s," +
             "\n}",
             facultyId, facultyName,
             address, phone, email

@@ -18,7 +18,6 @@ public class SetFacultyStudent extends Command {
     public void execute() {
         Scanner scanner = new Scanner(System.in);
         Student newStudent = new Student();
-        Direction direction = new Direction();
         Faculty faculty = new Faculty();
 
         try {
@@ -29,6 +28,7 @@ public class SetFacultyStudent extends Command {
                 System.out.println("Выберите факультет (выберите ID) или 0 для выхода");
                 faculty.printEntityTable();
                 chosenFacultyId = scanner.nextInt();
+                scanner.nextLine();
 
                 if (chosenFacultyId == 0) return;
                 if (!faculty.getEntityTable().fieldExists(chosenFacultyId)) {
@@ -36,12 +36,19 @@ public class SetFacultyStudent extends Command {
                     continue;
                 }
 
+                Direction facultyDirections = new Direction(chosenFacultyId);
+                if (facultyDirections.getEntityTable().getRowsCount() == 0) {
+                    System.out.println("В этом факультете не числится ни одно направление подготовки");
+                    return;
+                }
+
                 System.out.println("Выберите направление подготовки (выберите ID) или 0 для выхода");
-                direction.printEntityTable();
+                facultyDirections.printEntityTable();
                 chosenDirectionId = scanner.nextInt();
+                scanner.nextLine();
 
                 if (chosenDirectionId == 0) return;
-                if (!direction.getEntityTable().fieldExists(chosenDirectionId)) {
+                if (!facultyDirections.getEntityTable().fieldExists(chosenDirectionId)) {
                     System.out.println("Неверный ID");
                     continue;
                 }
@@ -49,18 +56,20 @@ public class SetFacultyStudent extends Command {
                 newStudent.setDirectionId(chosenDirectionId);
                 newStudent.setFacultyId(chosenFacultyId);
 
-                System.out.println("Введите ФИО студента:");
-                newStudent.fullName = scanner.next();
+                System.out.print("Введите ФИО студента:");
+                newStudent.fullName = scanner.nextLine();
 
-                System.out.println("Введите номер курса:");
+                System.out.print("Введите номер курса:");
                 newStudent.course = scanner.nextShort();
+                scanner.nextLine();
 
                 newStudent.setBirthdayFromConsole();
 
-                System.out.println("Введите размер стипендии:");
+                System.out.print("Введите размер стипендии (0, если нет): ");
                 newStudent.scholarship = scanner.nextFloat();
+                scanner.nextLine();
 
-                System.out.println("Введите номер телефона:");
+                System.out.print("Введите номер телефона:");
                 newStudent.phone = scanner.nextInt();
 
                 Database.createStudent(newStudent);
@@ -68,7 +77,7 @@ public class SetFacultyStudent extends Command {
             }
         }
         catch (SQLException error) {
-            System.out.println(error.getMessage());
+            error.printStackTrace();
         }
     }
 }

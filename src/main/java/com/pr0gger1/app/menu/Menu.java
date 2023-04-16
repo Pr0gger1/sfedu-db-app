@@ -74,7 +74,7 @@ public class Menu {
                     System.out.println("Неверная команда");
 
             } catch (Exception error) {
-                System.out.println(error.getMessage());
+                error.printStackTrace();
                 return;
             }
         }

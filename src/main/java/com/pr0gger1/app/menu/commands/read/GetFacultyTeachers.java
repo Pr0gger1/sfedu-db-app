@@ -7,4 +7,9 @@ public class GetFacultyTeachers extends Command {
     public GetFacultyTeachers(int id, String title) {
         super(id, title);
     }
+
+    @Override
+    public void execute() {
+
+    }
 }

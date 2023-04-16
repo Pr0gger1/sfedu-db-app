@@ -1,5 +1,6 @@
 package com.pr0gger1.database;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.Locale;
 
@@ -24,8 +25,9 @@ public class Database {
 
                 System.out.println("Успешное подключение");
             }
-            catch (Exception e) {
-                System.out.println(e.getMessage());
+            catch (SQLException | IOException error) {
+                error.printStackTrace();
+                System.exit(-1);
             }
         }
     }
@@ -78,7 +80,7 @@ public class Database {
             DataTables.STUDENTS.getTable(),
             student.fullName, student.course,
             student.getDirectionId(), student.getFacultyId(),
-            student.birthday, student.scholarship,
+            student.getFormattedBirthday(), student.scholarship,
             student.phone
         );
 
@@ -94,7 +96,7 @@ public class Database {
         String query = String.format(Locale.ROOT,
             "INSERT INTO teachers (birthday, faculty_id, full_name, phone, salary, specialization) " +
             "VALUES('%s', %d, '%s', %d, %.2f, '%s')",
-                teacher.birthday, teacher.getFacultyId(),
+                teacher.getFormattedBirthday(), teacher.getFacultyId(),
                 teacher.fullName, teacher.phone,
                 teacher.salary, teacher.specialization
         );

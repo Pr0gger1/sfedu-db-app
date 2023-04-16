@@ -12,13 +12,15 @@ public class Direction extends Entity {
     public String directionName;
 
 
-    public Direction(int directionId, int facultyId) {
-        super(DataTables.DIRECTIONS, new ArrayList<>(Arrays.asList("id", "direction_name")));
-        this.facultyId = facultyId;
-    }
-
     public Direction(int facultyId) {
-        super(DataTables.DIRECTIONS, new ArrayList<>(Arrays.asList("id", "direction_name")));
+        super(
+            DataTables.DIRECTIONS,
+            new ArrayList<>(Arrays.asList("id", "direction_name")),
+            String.format(
+                "SELECT id, direction_name FROM %s WHERE faculty_id = %d",
+                DataTables.DIRECTIONS.getTable(), facultyId
+            )
+        );
         this.facultyId = facultyId;
     }
 
@@ -48,7 +50,15 @@ public class Direction extends Entity {
 
     @Override
     public String toString() {
-        return "Direction: {}";
+        return String.format(
+            "Direction: {\n" +
+            "\n\tfaculty_id: %d," +
+            "\n\tdirection_name: %s," +
+            "\n\thead_id: %d," +
+            "\n}",
+            facultyId, directionName,
+            headOfDirectionId
+        );
     }
 
 }

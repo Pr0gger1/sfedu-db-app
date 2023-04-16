@@ -1,4 +1,6 @@
-package com.pr0gger1.app.formatOut;
+package com.pr0gger1.app.ConsoleTable;
+
+import com.pr0gger1.app.ConsoleTable.exceptions.TooManyRowsException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,39 +22,46 @@ public class Table {
         this.columns.addAll(Arrays.asList(columns));
     }
 
-    public void addRow(ArrayList<Object> row) {
+    public void addRow(ArrayList<Object> row) throws TooManyRowsException {
         // Если есть поля в таблице -> сравнить длину массива входной строки с массивом строк
         // Иначе просто добавляем строку в таблицу
         if (rows.size() > 0) {
+            if (row.size() != this.columns.size())
+                throw new TooManyRowsException("Количество элементов входной строки превышает количество столбцов");
             if (row.size() == rows.get(0).size())
                 rows.add(row);
-            else
-                System.out.println("Количество элементов в строке превышает количество столбов");
+            else throw new TooManyRowsException(
+                "Количество элементов входной строки превышает количество элементов в существующих"
+            );
         }
         else rows.add(row);
     }
 
-    public void addRow(Object... rowData) {
+    public void addRow(Object... row) throws TooManyRowsException {
         if (rows.size() > 0) {
-            if (rowData.length == rows.get(0).size())
-                rows.add(new ArrayList<>(Arrays.asList(rowData)));
-            else System.out.println("Во входной строке больше строк, чем в существующих");
+            if (row.length != this.columns.size())
+                throw new TooManyRowsException("Количество элементов входной строки превышает количество столбцов");
+            if (row.length == rows.get(0).size())
+                rows.add(new ArrayList<>(Arrays.asList(row)));
+            else throw new TooManyRowsException(
+                "Количество элементов входной строки превышает количество элементов в существующих"
+            );
         }
-        else rows.add(new ArrayList<>(Arrays.asList(rowData)));
+        else rows.add(new ArrayList<>(Arrays.asList(row)));
     }
 
-    public void addRows(ArrayList<ArrayList<Object>> newRows) {
-        if (rows.size() > 0) {
-            if (newRows.get(0).size() == rows.get(0).size())
-                rows.addAll(newRows);
-
-            else System.out.println("Строки больше, чем количество столбцов");
-            return;
+    public void addRows(ArrayList<ArrayList<Object>> rows) throws TooManyRowsException {
+        if (this.rows.get(0).size() > 0 && columns.size() > 0) {
+            for (ArrayList<Object> row : rows) {
+                if (row.size() == columns.size())
+                    this.rows.add(row);
+                else throw new TooManyRowsException("Элементов строки больше, чем количество столбцов");
+            }
         }
-        rows.addAll(newRows);
+        else this.rows.addAll(rows);
     }
 
-    public void addColumns(ArrayList<String> columns) throws Exception {
+    public void addColumns(ArrayList<String> columns) {
         this.columns.addAll(columns);
     }
 

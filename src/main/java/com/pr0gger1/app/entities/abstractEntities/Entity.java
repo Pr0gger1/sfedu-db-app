@@ -1,6 +1,7 @@
 package com.pr0gger1.app.entities.abstractEntities;
 
-import com.pr0gger1.app.formatOut.Table;
+import com.pr0gger1.app.ConsoleTable.Table;
+import com.pr0gger1.app.ConsoleTable.exceptions.TooManyRowsException;
 import com.pr0gger1.database.DataTables;
 import com.pr0gger1.database.Database;
 
@@ -13,9 +14,23 @@ public abstract class Entity {
     private final DataTables entityTableName;
     private final ArrayList<String> requiredColumns = new ArrayList<>();
 
+    private String currentQuery = "SELECT %s FROM %s";
+
     protected Entity(DataTables table, ArrayList<String> columns) {
         entityTableName = table;
         requiredColumns.addAll(columns);
+        currentQuery = String.format(
+                    currentQuery, String.join(", ", columns), entityTableName.getTable()
+        );
+
+        entityTable = getEntityTable();
+    }
+
+    protected Entity(DataTables table, ArrayList<String> columns, String query) {
+        entityTableName = table;
+        requiredColumns.addAll(columns);
+        currentQuery = query;
+
         entityTable = getEntityTable();
     }
 
@@ -24,12 +39,7 @@ public abstract class Entity {
         try {
             Connection conn = Database.getConnection();
             Statement statement = conn.createStatement();
-            ResultSet result = statement.executeQuery(
-                String.format(
-                        "SELECT %s FROM %s",
-                        String.join(", ", requiredColumns), entityTableName.getTable()
-                )
-            );
+            ResultSet result = statement.executeQuery(currentQuery);
 
             ResultSetMetaData metaData = result.getMetaData();
             int columnCount = metaData.getColumnCount();
@@ -54,8 +64,8 @@ public abstract class Entity {
             }
 
         }
-        catch (SQLException error) {
-            System.out.println(error.getMessage());
+        catch (SQLException | TooManyRowsException error) {
+            error.printStackTrace();
         }
 
         return entityTable;

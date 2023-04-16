@@ -58,7 +58,7 @@ public class SetDirection extends Command {
             else System.out.println("В базе данных отсутствуют факультеты или преподаватели");
         }
         catch (SQLException error) {
-            System.out.println(error.getMessage());
+            error.printStackTrace();
         }
     }
 }

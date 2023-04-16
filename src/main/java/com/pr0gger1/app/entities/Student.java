@@ -1,22 +1,18 @@
 package com.pr0gger1.app.entities;
 
-import com.pr0gger1.app.entities.abstractEntities.Entity;
+import com.pr0gger1.app.entities.abstractEntities.Human;
 import com.pr0gger1.database.DataTables;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.Scanner;
 
-public class Student extends Entity {
+public class Student extends Human {
     private int facultyId = -1;
     private int directionId = -1;
     public short course;
     public float scholarship;
     public int phone;
-    public String birthday;
     public String fullName;
 
     public Student() {
@@ -33,6 +29,10 @@ public class Student extends Entity {
         return directionId;
     }
 
+    public void setBirthday(LocalDate date) {
+        this.birthday = date;
+    }
+
     public int getFacultyId() {
         return facultyId;
     }
@@ -45,21 +45,23 @@ public class Student extends Entity {
         this.facultyId = facultyId;
     }
 
-    public void setBirthdayFromConsole() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Введите дату рождения (пример 1984-05-25): ");
-
-        while (true) {
-            try {
-                SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-
-                Date date = dateFormatter.parse(scanner.next());
-                birthday = dateFormatter.format(date);
-
-                break;
-            } catch (ParseException parseError) {
-                System.out.println(parseError.getMessage());
-            }
-        }
+    @Override
+    public String toString() {
+        return String.format(
+            "Student:{\n" +
+            "\tfacultyId: %d," +
+            "\n\tdirectionId: %d," +
+            "\n\tfull_name: %s," +
+            "\n\tcourse: %d," +
+            "\n\tbirthday: %s," +
+            "\n\tscholarship: %f," +
+            "\n\tphone: %d," +
+            "\n}",
+            facultyId, directionId,
+            fullName, course,
+            birthday != null ? birthday.toString() : "null",
+            scholarship, phone
+        );
     }
+
 }

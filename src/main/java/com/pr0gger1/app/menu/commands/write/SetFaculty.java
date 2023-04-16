@@ -37,7 +37,7 @@ public class SetFaculty extends Command {
                 System.out.println("Данные успешно добавлены");
             }
             catch (SQLException error) {
-                System.out.println(error.getMessage());
+                error.printStackTrace();
             }
         }
     }

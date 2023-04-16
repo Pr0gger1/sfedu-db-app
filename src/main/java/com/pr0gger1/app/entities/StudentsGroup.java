@@ -49,9 +49,9 @@ public class StudentsGroup extends Entity {
     public String toString() {
         return String.format(
             "StudentsGroup:{\n" +
-            "\ngroupId: %d," +
-            "\ngroupName: %s," +
-            "\nfacultyId: %d," +
+            "\n\tgroupId: %d," +
+            "\n\tgroupName: %s," +
+            "\n\tfacultyId: %d" +
             "\n}",
             groupId, groupName, facultyId
         );
