@@ -7,16 +7,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Teacher extends Human {
-    private int facultyId = -1;
-    public long phone = -1;
-    public String fullName;
-    public String specialization;
-    public float salary;
+    private int facultyId;
+    private long phone;
+    private String fullName;
+    private String specialization;
+    private float salary;
 
     public Teacher(int facultyId) {
         super(
             DataTables.TEACHERS,
-            new ArrayList<>(Arrays.asList("id", "full_name")),
             String.format(
                 "SELECT id, full_name FROM %s WHERE id NOT IN (SELECT head FROM %s)",
                     DataTables.TEACHERS, DataTables.DIRECTIONS
@@ -33,9 +32,40 @@ public class Teacher extends Human {
         return facultyId;
     }
 
+    public float getSalary() {
+        return salary;
+    }
+
+    public long getPhone() {
+        return phone;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public String getSpecialization() {
+        return specialization;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setPhone(long phone) {
+        this.phone = phone;
+    }
+
+    public void setSalary(float salary) {
+        this.salary = salary;
+    }
+
+    public void setSpecialization(String specialization) {
+        this.specialization = specialization;
+    }
+
     public void setFacultyId(int id) {
-        if (facultyId == -1) facultyId = id;
-        else System.out.println("Невозможно изменить ID факультета");
+        facultyId = id;
     }
 
 

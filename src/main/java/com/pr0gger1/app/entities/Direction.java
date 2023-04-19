@@ -7,15 +7,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Direction extends Entity {
-    private int facultyId = -1;
-    private int headOfDirectionId = -1;
-    public String directionName;
+    private int facultyId;
+    private int headOfDirectionId;
+    private String directionName;
 
 
     public Direction(int facultyId) {
         super(
             DataTables.DIRECTIONS,
-            new ArrayList<>(Arrays.asList("id", "direction_name")),
             String.format(
                 "SELECT id, direction_name FROM %s WHERE faculty_id = %d",
                 DataTables.DIRECTIONS.getTable(), facultyId
@@ -32,20 +31,24 @@ public class Direction extends Entity {
         return facultyId;
     }
 
-    public void setFacultyId(int facultyId) {
-        if (this.facultyId == -1)
-            this.facultyId = facultyId;
-        else System.out.println("Невозможно изменить ID");
+    public String getDirectionName() {
+        return directionName;
     }
 
     public int getHeadOfDirectionId() {
         return headOfDirectionId;
     }
 
+    public void setFacultyId(int facultyId) {
+        this.facultyId = facultyId;
+    }
+
+    public void setDirectionName(String directionName) {
+        this.directionName = directionName;
+    }
+
     public void setHeadOfDirectionId(int headOfDirectionId) {
-        if (this.headOfDirectionId == -1)
-            this.headOfDirectionId = headOfDirectionId;
-        else System.out.println("Невозможно изменить ID");
+        this.headOfDirectionId = headOfDirectionId;
     }
 
     @Override

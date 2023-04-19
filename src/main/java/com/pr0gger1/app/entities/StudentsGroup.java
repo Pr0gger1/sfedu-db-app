@@ -7,21 +7,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class StudentsGroup extends Entity {
-    private int facultyId = -1;
-    private int groupId = -1;
-    public String groupName;
+    private int facultyId;
+    private String groupName;
 
     public StudentsGroup(int facultyId) {
         super(DataTables.GROUPS, new ArrayList<>(Arrays.asList("id", "group_name")));
         this.facultyId = facultyId;
-    }
-
-    public StudentsGroup(int groupId, int facultyId, String groupName) {
-        super(DataTables.GROUPS, new ArrayList<>(Arrays.asList("id", "group_name")));
-
-        this.groupId = groupId;
-        this.facultyId = facultyId;
-        this.groupName = groupName;
     }
 
     public StudentsGroup(int facultyId, String groupName) {
@@ -33,27 +24,30 @@ public class StudentsGroup extends Entity {
     public StudentsGroup() {
         super(DataTables.GROUPS, new ArrayList<>(Arrays.asList("id", "group_name")));
     }
-
-
     public int getFacultyId() {
         return facultyId;
     }
 
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
     public void setFacultyId(int facultyId) {
-        if (this.facultyId == -1)
-            this.facultyId = facultyId;
-        else System.out.println("Невозможно изменить ID");
+        this.facultyId = facultyId;
     }
 
     @Override
     public String toString() {
         return String.format(
             "StudentsGroup:{\n" +
-            "\n\tgroupId: %d," +
-            "\n\tgroupName: %s," +
+            "\tgroupName: %s," +
             "\n\tfacultyId: %d" +
             "\n}",
-            groupId, groupName, facultyId
+            groupName, facultyId
         );
     }
 }

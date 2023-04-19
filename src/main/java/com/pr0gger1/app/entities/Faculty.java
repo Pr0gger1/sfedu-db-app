@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Faculty extends Entity {
-    private int facultyId = -1;
-    public String facultyName;
-    public String address;
-    public String email;
-    public long phone;
+    private int facultyId;
+    private String facultyName;
+    private String address;
+    private String email;
+    private long phone;
 
     public Faculty(int facultyId) {
         super(DataTables.FACULTIES, new ArrayList<>(Arrays.asList("id", "faculty_name")));
@@ -36,10 +36,40 @@ public class Faculty extends Entity {
         return facultyId;
     }
 
+    public long getPhone() {
+        return phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getFacultyName() {
+        return facultyName;
+    }
+
     public void setFacultyId(int facultyId) {
-        if (this.facultyId == -1)
-            this.facultyId = facultyId;
-        else System.out.println("Невозможно изменить ID");
+        this.facultyId = facultyId;
+    }
+
+    public void setPhone(long phone) {
+        this.phone = phone;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setFacultyName(String facultyName) {
+        this.facultyName = facultyName;
     }
 
     public String toString() {

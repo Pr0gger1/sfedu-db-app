@@ -16,8 +16,8 @@ public abstract class Human extends Entity {
         super(table, columns);
     }
 
-    protected Human(DataTables table, ArrayList<String> columns, String query) {
-        super(table, columns, query);
+    protected Human(DataTables table, String query) {
+        super(table, query);
     }
 
     public void setBirthdayFromConsole() {

@@ -13,6 +13,7 @@ public class Menu {
         new ReadLevel(1, "Чтение данных"),
         new WriteLevel(2, "Запись данных"),
         new DeleteLevel(3, "Удаление данных"),
+        new UpdateLevel(4, "Обновление данных"),
         new Exit()
     };
 

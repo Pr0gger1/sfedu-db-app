@@ -10,6 +10,7 @@ public class ReadLevel extends Command {
         new GetFacultyTeachers(3, "Список преподавателей факультета"),
         new GetFacultyGroups(4,"Список групп факультета"),
         new GetAllDirections(5,"Список всех направлений обучения"),
+        new GetSubjects(6, "Список всех предметов"),
         new BackCommand()
     };
 

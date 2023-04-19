@@ -1,6 +1,7 @@
 package com.pr0gger1.app.ConsoleTable;
 
-import com.pr0gger1.app.ConsoleTable.exceptions.TooManyRowsException;
+import com.pr0gger1.exceptions.TooManyColumnsException;
+import com.pr0gger1.exceptions.TooManyRowsException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,7 +42,7 @@ public class Table {
         if (rows.size() > 0) {
             if (row.length != this.columns.size())
                 throw new TooManyRowsException("Количество элементов входной строки превышает количество столбцов");
-            if (row.length == rows.get(0).size())
+            else if (row.length == rows.get(0).size())
                 rows.add(new ArrayList<>(Arrays.asList(row)));
             else throw new TooManyRowsException(
                 "Количество элементов входной строки превышает количество элементов в существующих"
@@ -61,8 +62,15 @@ public class Table {
         else this.rows.addAll(rows);
     }
 
-    public void addColumns(ArrayList<String> columns) {
-        this.columns.addAll(columns);
+    public void addColumns(ArrayList<String> columns) throws TooManyColumnsException {
+        if (this.columns.size() > 0)
+            if (columns.size() == this.columns.size())
+                this.columns.addAll(columns);
+            else throw new TooManyColumnsException(
+                "Входная последовательность колонок больше существующей"
+            );
+
+        else this.columns.addAll(columns);
     }
 
     public void addColumn(String column) {
@@ -134,11 +142,12 @@ public class Table {
     public int getRowsCount() {
         return rows.size();
     }
+
     public int getColumnsCount() {
         return columns.size();
     }
 
-    public boolean fieldExists(int field) {
+    public boolean fieldExists(Object field) {
         for (ArrayList<Object> row : rows) {
             if (row.contains(field))
                 return true;
@@ -146,12 +155,19 @@ public class Table {
         return false;
     }
 
-    public boolean fieldExists(String field) {
-        for (ArrayList<Object> row : rows) {
-            if (row.contains(field))
-                return true;
+    public ArrayList<Object> getColumnValues(String column) {
+        if (columns.contains(column)) {
+            if (rows.size() == 0) return null;
+            int columnIndex = this.columns.indexOf(column);
+
+            ArrayList<Object> values = new ArrayList<>();
+            for (ArrayList<Object> row : rows) {
+                values.add(row.get(columnIndex));
+            }
+
+            return values;
         }
-        return false;
+        return null;
     }
 
     @Override

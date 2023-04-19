@@ -1,4 +1,4 @@
-package com.pr0gger1.app.ConsoleTable.exceptions;
+package com.pr0gger1.exceptions;
 
 public class TooManyRowsException extends Exception {
     public TooManyRowsException(String message) {

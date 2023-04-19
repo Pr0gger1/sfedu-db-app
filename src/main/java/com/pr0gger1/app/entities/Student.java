@@ -8,12 +8,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Student extends Human {
-    private int facultyId = -1;
-    private int directionId = -1;
-    public short course;
-    public float scholarship;
-    public int phone;
-    public String fullName;
+    private int studentId;
+    private int facultyId;
+    private int directionId;
+    private short course;
+    private float scholarship;
+    private long phone;
+    private String fullName;
 
     public Student() {
         super(DataTables.STUDENTS, new ArrayList<>(Arrays.asList("id", "full_name")));
@@ -25,18 +26,56 @@ public class Student extends Human {
         this.facultyId = facultyId;
     }
 
+    public int getStudentId() {
+        return studentId;
+    }
     public int getDirectionId() {
         return directionId;
     }
+    public int getFacultyId() {
+        return facultyId;
+    }
+
+    public float getScholarship() {
+        return scholarship;
+    }
+
+    public long getPhone() {
+        return phone;
+    }
+
+    public short getCourse() {
+        return course;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
 
     public void setBirthday(LocalDate date) {
         this.birthday = date;
     }
 
-    public int getFacultyId() {
-        return facultyId;
+    public void setStudentId(int studentId) {
+        this.studentId = studentId;
     }
 
+    public void setCourse(short course) {
+        this.course = course;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setPhone(long phone) {
+        this.phone = phone;
+    }
+
+    public void setScholarship(float scholarship) {
+        this.scholarship = scholarship;
+    }
     public void setDirectionId(int directionId) {
         this.directionId = directionId;
     }

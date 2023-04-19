@@ -2,10 +2,14 @@ package com.pr0gger1.database;
 
 import java.io.IOException;
 import java.sql.*;
-import java.util.Locale;
 
+import com.pr0gger1.app.ConsoleTable.Table;
+import com.pr0gger1.exceptions.TooManyRowsException;
 import com.pr0gger1.app.entities.*;
 import io.github.cdimascio.dotenv.Dotenv;
+
+import java.sql.Date;
+import java.util.ArrayList;
 
 public class Database {
     private static Connection connection = null;
@@ -36,14 +40,22 @@ public class Database {
         return connection;
     }
 
-    public static void createTable(String tableName, String body) throws SQLException {
-        String query = String.format("CREATE TABLE IF NOT EXISTS %s %s", tableName, body);
+    private static int getMaxId(DataTables table) {
+        int newId = 0;
+        try {
+            String maxIdQuery = "SELECT MAX(id) FROM " + table.getTable();
 
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.executeUpdate();
+            PreparedStatement countStatement = connection.prepareStatement(maxIdQuery);
+
+            ResultSet resultSet =  countStatement.executeQuery();
+            while (resultSet.next()) newId = resultSet.getInt("max") + 1;
+
         }
+        catch (SQLException error) {
+            error.printStackTrace();
+        }
+        return newId;
     }
-
 
     /**
      * @param tableName имя таблицы, в которую добавляются данные
@@ -74,18 +86,22 @@ public class Database {
      * @param student объект класса Student
      */
     public static void createStudent(Student student) throws SQLException {
-        String query = String.format(Locale.ROOT,
-          "INSERT INTO %s (full_name, course, direction, faculty, birthday, scholarship, phone) " +
-          "VALUES('%s', %d, %d, %d, '%s', %f, %d)",
-            DataTables.STUDENTS.getTable(),
-            student.fullName, student.course,
-            student.getDirectionId(), student.getFacultyId(),
-            student.getFormattedBirthday(), student.scholarship,
-            student.phone
-        );
+        String query = "INSERT INTO students VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-        PreparedStatement statement = connection.prepareStatement(query);
-        statement.executeUpdate();
+        int columnIndex = 1;
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(columnIndex, getMaxId(DataTables.STUDENTS));
+            statement.setString(++columnIndex, student.getFullName());
+            statement.setShort(++columnIndex, student.getCourse());
+            statement.setInt(++columnIndex, student.getDirectionId());
+            statement.setInt(++columnIndex, student.getFacultyId());
+            statement.setDate(++columnIndex, Date.valueOf(student.getBirthday()));
+            statement.setFloat(++columnIndex, student.getScholarship());
+            statement.setLong(++columnIndex, student.getPhone());
+
+            statement.executeUpdate();
+        }
     }
 
     /**
@@ -93,16 +109,21 @@ public class Database {
      * @param teacher объект класса Teacher
      */
     public static void createTeacher(Teacher teacher) throws SQLException {
-        String query = String.format(Locale.ROOT,
-            "INSERT INTO teachers (birthday, faculty_id, full_name, phone, salary, specialization) " +
-            "VALUES('%s', %d, '%s', %d, %.2f, '%s')",
-                teacher.getFormattedBirthday(), teacher.getFacultyId(),
-                teacher.fullName, teacher.phone,
-                teacher.salary, teacher.specialization
-        );
+        String query = "INSERT INTO teachers VALUES(?, ?, ?, ?, ?, ?, ?)";
+        int columnIndex = 1;
 
-        PreparedStatement statement = connection.prepareStatement(query);
-        statement.executeUpdate();
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(columnIndex, getMaxId(DataTables.TEACHERS));
+            statement.setString(++columnIndex, teacher.getFullName());
+            statement.setFloat(++columnIndex, teacher.getSalary());
+            statement.setString(++columnIndex, teacher.getSpecialization());
+            statement.setInt(++columnIndex, teacher.getFacultyId());
+            statement.setDate(++columnIndex, Date.valueOf(teacher.getBirthday()));
+            statement.setLong(++columnIndex, teacher.getPhone());
+
+            statement.executeUpdate();
+        }
     }
 
     /**
@@ -110,14 +131,16 @@ public class Database {
      * @param group объект класса Group
      */
     public static void createGroup(StudentsGroup group) throws SQLException {
-        String query = String.format(
-            "INSERT INTO groups (faculty_id, group_name) " +
-            "VALUES(%d, '%s')",
-            group.getFacultyId(), group.groupName
-        );
+        String query = "INSERT INTO groups VALUES(?, ?, ?)";
+        int columnIndex = 1;
 
-        PreparedStatement statement = connection.prepareStatement(query);
-        statement.executeUpdate();
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(columnIndex, getMaxId(DataTables.GROUPS));
+            statement.setInt(++columnIndex, group.getFacultyId());
+            statement.setString(++columnIndex, group.getGroupName());
+
+            statement.executeUpdate();
+        }
     }
 
     /**
@@ -125,33 +148,48 @@ public class Database {
      * @param faculty объект класса Faculty
      */
     public static void createFaculty(Faculty faculty) throws SQLException {
-        String query = String.format(
-            "INSERT INTO %s (" +
-                "faculty_name, address, " +
-                "phone, email" +
-            ") " +
-            "VALUES('%s', '%s', %d, '%s')",
-            DataTables.FACULTIES.getTable(),
-            faculty.facultyName, faculty.address,
-            faculty.phone, faculty.email
-        );
+        String query = "INSERT INTO faculties VALUES (?, ?, ?, ?, ?)";
 
-        PreparedStatement statement = connection.prepareStatement(query);
-        statement.executeUpdate();
+        int columnIndex = 1;
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(columnIndex, getMaxId(DataTables.FACULTIES));
+            statement.setString(++columnIndex, faculty.getFacultyName());
+            statement.setString(++columnIndex, faculty.getAddress());
+            statement.setLong(++columnIndex, faculty.getPhone());
+            statement.setString(++columnIndex, faculty.getEmail());
+
+            statement.executeUpdate();
+        }
     }
 
     public static void createDirection(Direction direction) throws SQLException {
-        String query = String.format(
-                "INSERT INTO %s (faculty_id, direction_name, head)" +
-                " VALUES(%d, '%s', %d)",
-                DataTables.DIRECTIONS.getTable(),
-                direction.getFacultyId(),
-                direction.directionName,
-                direction.getHeadOfDirectionId()
-        );
+        String query = "INSERT INTO directions VALUES(?, ?, ?, ?)";
+        int columnIndex = 1;
 
-        PreparedStatement statement = connection.prepareStatement(query);
-        statement.executeUpdate();
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(columnIndex, getMaxId(DataTables.DIRECTIONS));
+            statement.setInt(++columnIndex, direction.getFacultyId());
+            statement.setString(++columnIndex, direction.getDirectionName());
+            statement.setInt(++columnIndex, direction.getHeadOfDirectionId());
+
+            statement.executeUpdate();
+        }
+    }
+
+    public static void createSubject(Subject subject) throws SQLException {
+        String query = "INSERT INTO subjects VALUES(?, ?, ?, ?, ?)";
+        int columnIndex = 1;
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(columnIndex, getMaxId(DataTables.SUBJECTS));
+            statement.setString(++columnIndex, subject.getSubjectName());
+            statement.setInt(++columnIndex, subject.getFacultyId());
+            statement.setInt(++columnIndex, subject.getDirectionId());
+            statement.setInt(++columnIndex, subject.getTeacherId());
+
+            statement.executeUpdate();
+        }
     }
 
     /**
@@ -160,7 +198,7 @@ public class Database {
      * @param condition условие, по которому извлекаются данные
      * @return ResultSet
      */
-    public static ResultSet getRow(DataTables tableName, String[] columns, String condition) throws SQLException {
+    public static ResultSet getData(DataTables tableName, String[] columns, String condition) throws SQLException {
         String query = String.format(
                 "SELECT %s FROM %s %s", String.join(", ", columns), tableName.getTable(), condition
         );
@@ -179,7 +217,7 @@ public class Database {
      * @param condition условие, по которому происходит выборка данных
      * @return ResultSet
      */
-    public static ResultSet getRow(DataTables tableName, String columns, String condition) throws SQLException {
+    public static ResultSet getData(DataTables tableName, String columns, String condition) throws SQLException {
         String query = String.format("SELECT %s FROM %s %s", columns, tableName.getTable(), condition);
 
         PreparedStatement statement = connection.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
@@ -211,5 +249,26 @@ public class Database {
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.executeUpdate();
         }
+    }
+
+    public static Table getFormedTable(ResultSet queryResult) throws SQLException, TooManyRowsException {
+        ResultSetMetaData queryMetaData = queryResult.getMetaData();
+        Table table = new Table();
+
+        int columnCount = queryMetaData.getColumnCount();
+        for (int i = 1; i <= columnCount; i++) {
+            table.addColumn(queryMetaData.getColumnName(i));
+        }
+
+        while (queryResult.next()) {
+            ArrayList<Object> row =  new ArrayList<>();
+
+            for (int i = 1; i <= columnCount; i++) {
+                row.add(queryResult.getObject(i));
+            }
+            table.addRow(row);
+        }
+
+        return table;
     }
 }

@@ -1,7 +1,7 @@
 package com.pr0gger1.app.menu.commands.read;
 
 import com.pr0gger1.app.ConsoleTable.Table;
-import com.pr0gger1.app.ConsoleTable.exceptions.TooManyRowsException;
+import com.pr0gger1.exceptions.TooManyRowsException;
 import com.pr0gger1.app.menu.commands.Command;
 import com.pr0gger1.database.DataTables;
 import com.pr0gger1.database.Database;
@@ -20,7 +20,7 @@ public class GetFacultyGroups extends Command {
         int count = 0;
 
         try {
-            ResultSet groupData = Database.getRow(DataTables.GROUPS, "*", "");
+            ResultSet groupData = Database.getData(DataTables.GROUPS, "*", "");
             while (groupData.next()) {
                 count++;
 
@@ -28,7 +28,7 @@ public class GetFacultyGroups extends Command {
                 String groupName = groupData.getString("group_name");
 
                 String facultyFilter = String.format("WHERE id = %d", facultyId);
-                ResultSet facultyName = Database.getRow(
+                ResultSet facultyName = Database.getData(
                     DataTables.FACULTIES, "faculty_name", facultyFilter
                 );
 

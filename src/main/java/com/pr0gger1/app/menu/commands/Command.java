@@ -1,8 +1,8 @@
 package com.pr0gger1.app.menu.commands;
 
 public abstract class Command {
-    private final String title;
-    protected int id;
+    private String title = "";
+    private final int id;
 
     protected Command(int id, String title) {
         this.title = title;
