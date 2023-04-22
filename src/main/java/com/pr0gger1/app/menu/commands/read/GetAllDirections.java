@@ -16,21 +16,22 @@ public class GetAllDirections extends Command {
 
     @Override
     public void execute() {
-        Table directionTable = new Table("Направление подготовки", "Факультет", "Глава направления");
+        Table directionTable = new Table("ID", "Направление подготовки", "Факультет", "Глава направления");
         try {
             ResultSet directions = Database.getData(
                 DataTables.DIRECTIONS,
-            "f.faculty_name, direction_name, t.full_name",
+            "directions.id, f.faculty_name, direction_name, t.full_name",
             "join faculties f on directions.faculty_id = f.id " +
                     "join teachers t on directions.head = t.id"
             );
 
             while (directions.next()) {
+                int directionId = directions.getInt("id");
                 String faculty = directions.getString("faculty_name");
                 String direction = directions.getString("direction_name");
                 String teacherName = directions.getString("full_name");
 
-                directionTable.addRow(direction, faculty, teacherName);
+                directionTable.addRow(directionId, direction, faculty, teacherName);
             }
 
             System.out.println(directionTable);

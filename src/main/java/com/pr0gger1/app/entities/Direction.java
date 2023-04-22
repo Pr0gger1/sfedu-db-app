@@ -5,8 +5,11 @@ import com.pr0gger1.database.DataTables;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class Direction extends Entity {
+    Scanner scanner = new Scanner(System.in);
+
     private int facultyId;
     private int headOfDirectionId;
     private String directionName;
@@ -31,6 +34,7 @@ public class Direction extends Entity {
         return facultyId;
     }
 
+
     public String getDirectionName() {
         return directionName;
     }
@@ -47,9 +51,16 @@ public class Direction extends Entity {
         this.directionName = directionName;
     }
 
+    public void setDirectionNameFromConsole() {
+        System.out.println("Введите название направления подготовки");
+        setDirectionName(scanner.nextLine());
+    }
+
     public void setHeadOfDirectionId(int headOfDirectionId) {
         this.headOfDirectionId = headOfDirectionId;
     }
+
+
 
     @Override
     public String toString() {

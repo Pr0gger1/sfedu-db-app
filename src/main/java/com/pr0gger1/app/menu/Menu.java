@@ -4,6 +4,7 @@ import com.pr0gger1.app.menu.commands.*;
 import com.pr0gger1.app.menu.commands.DeleteLevel;
 import com.pr0gger1.app.menu.commands.ReadLevel;
 import com.pr0gger1.app.menu.commands.WriteLevel;
+import com.pr0gger1.app.menu.commands.UpdateLevel;
 
 import java.util.Scanner;
 
@@ -14,6 +15,7 @@ public class Menu {
         new WriteLevel(2, "Запись данных"),
         new DeleteLevel(3, "Удаление данных"),
         new UpdateLevel(4, "Обновление данных"),
+        new GradeLevel(5, "Успеваемость"),
         new Exit()
     };
 

@@ -5,8 +5,11 @@ import com.pr0gger1.database.DataTables;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class Subject extends Entity {
+    private final Scanner scanner = new Scanner(System.in);
+
     private int facultyId;
     private int directionId;
     private int teacherId;
@@ -29,23 +32,6 @@ public class Subject extends Entity {
         );
         this.facultyId = facultyId;
     }
-
-    public void setFacultyId(int facultyId) {
-        this.facultyId = facultyId;
-    }
-
-    public void setDirectionId(int directionId) {
-        this.directionId = directionId;
-    }
-
-    public void setTeacherId(int teacherId) {
-        this.teacherId = teacherId;
-    }
-
-    public void setSubjectName(String subjectName) {
-        this.subjectName = subjectName;
-    }
-
     public int getFacultyId() {
         return facultyId;
     }
@@ -61,6 +47,28 @@ public class Subject extends Entity {
     public String getSubjectName() {
         return subjectName;
     }
+
+    public void setFacultyId(int facultyId) {
+        this.facultyId = facultyId;
+    }
+
+
+    public void setDirectionId(int directionId) {
+        this.directionId = directionId;
+    }
+
+    public void setTeacherId(int teacherId) {
+        this.teacherId = teacherId;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
+    }
+    public void setSubjectNameFromConsole() {
+        System.out.print("Введите название предмета: ");
+        setSubjectName(scanner.nextLine());
+    }
+
 
     @Override
     public String toString() {

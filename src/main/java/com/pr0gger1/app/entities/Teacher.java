@@ -5,8 +5,11 @@ import com.pr0gger1.database.DataTables;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class Teacher extends Human {
+    private final Scanner scanner = new Scanner(System.in);
+
     private int facultyId;
     private long phone;
     private String fullName;
@@ -17,8 +20,10 @@ public class Teacher extends Human {
         super(
             DataTables.TEACHERS,
             String.format(
-                "SELECT id, full_name FROM %s WHERE id NOT IN (SELECT head FROM %s)",
-                    DataTables.TEACHERS, DataTables.DIRECTIONS
+                "SELECT id, full_name FROM %s" +
+                " WHERE id NOT IN (SELECT head FROM %s)" +
+                " AND faculty_id = (SELECT faculty_id FROM directions WHERE faculty_id = %d)",
+                    DataTables.TEACHERS, DataTables.DIRECTIONS, facultyId
             )
         );
         this.facultyId = facultyId;
@@ -68,6 +73,36 @@ public class Teacher extends Human {
         facultyId = id;
     }
 
+    public void setTeacherDataFromConsole() {
+        System.out.println("Введите ФИО преподавателя: ");
+        setFullName(scanner.nextLine());
+
+        System.out.println("Введите зарплату: ");
+        setSalary(scanner.nextFloat());
+        scanner.nextLine();
+
+        System.out.println("Введите специализацию: ");
+        setSpecialization(scanner.nextLine());
+
+        setBirthdayFromConsole();
+
+        System.out.println("Введите номер телефона: ");
+        setPhone(scanner.nextLong());
+        scanner.nextLine();
+    }
+
+    @Override
+    public void setIdFromConsole(String entityName) {
+        setCurrentQuery(
+            String.format(
+                "SELECT id, full_name FROM teachers " +
+                "WHERE id NOT IN (SELECT s.teacher_id FROM directions d JOIN subjects s ON d.head != s.teacher_id) " +
+                "AND faculty_id = (SELECT faculty_id FROM directions WHERE faculty_id = %d)",
+                facultyId
+            )
+        );
+        super.setIdFromConsole(entityName);
+    }
 
     @Override
     public String toString() {

@@ -164,7 +164,6 @@ public class Table {
             for (ArrayList<Object> row : rows) {
                 values.add(row.get(columnIndex));
             }
-
             return values;
         }
         return null;

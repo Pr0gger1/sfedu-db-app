@@ -3,12 +3,12 @@ package com.pr0gger1.app.menu.commands.write;
 import com.pr0gger1.app.entities.Direction;
 import com.pr0gger1.app.entities.Faculty;
 import com.pr0gger1.app.entities.Teacher;
-import com.pr0gger1.app.menu.commands.ConsoleGetter;
+import com.pr0gger1.app.menu.commands.Command;
 import com.pr0gger1.database.Database;
 
 import java.sql.SQLException;
 
-public class SetDirection extends ConsoleGetter {
+public class SetDirection extends Command {
     Faculty faculty = new Faculty();
     Teacher teacher = new Teacher();
     Direction newDirection = new Direction();
@@ -25,14 +25,16 @@ public class SetDirection extends ConsoleGetter {
 
             if (faculty.getEntityTable().getRowsCount() > 0 && teacher.getEntityTable().getRowsCount() > 0) {
                 while (true) {
-                    chosenFacultyId = getFacultyIdFromConsole(faculty);
+                    faculty.setIdFromConsole("факультет");
+                    chosenFacultyId = faculty.getId();
 
                     if (chosenFacultyId == 0) return;
                     if (!faculty.getEntityTable().fieldExists(chosenFacultyId)) {
                         System.out.println("Неверный ID");
                     }
 
-                    chosenTeacherId = getTeacherIdFromConsole(teacher, chosenFacultyId);
+                    teacher.setIdFromConsole("преподавателя");
+                    chosenTeacherId = teacher.getId();
 
                     if (chosenTeacherId == 0) return;
                     if (!teacher.getEntityTable().fieldExists(chosenTeacherId)) {
@@ -40,8 +42,7 @@ public class SetDirection extends ConsoleGetter {
                         continue;
                     }
 
-                    getDirectionNameFromConsole(newDirection);
-                    newDirection.setFacultyId(chosenFacultyId);
+                    newDirection.setDirectionNameFromConsole();
                     newDirection.setHeadOfDirectionId(chosenTeacherId);
 
                     Database.createDirection(newDirection);

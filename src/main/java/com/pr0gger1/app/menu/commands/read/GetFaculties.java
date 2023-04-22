@@ -26,7 +26,7 @@ public class GetFaculties extends Command {
                 String email = faculties.getString("email");
                 long phone = faculties.getLong("phone");
 
-                facultyTable.addRow(facultyName, address, email, String.valueOf(phone));
+                facultyTable.addRow(facultyName, address, email, phone);
             }
 
             System.out.println(facultyTable);

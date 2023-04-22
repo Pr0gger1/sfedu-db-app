@@ -22,7 +22,7 @@ public class ReadLevel extends Command {
     public void execute() {
         Menu menu = new Menu();
         Menu.levelUp();
-        menu.showMenu(secondLevel, "");
+        menu.showMenu(secondLevel, "Чтение данных");
     }
 }
 

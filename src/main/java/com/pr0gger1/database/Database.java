@@ -88,10 +88,10 @@ public class Database {
     public static void createStudent(Student student) throws SQLException {
         String query = "INSERT INTO students VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-        int columnIndex = 1;
+        int columnIndex = 0;
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(columnIndex, getMaxId(DataTables.STUDENTS));
+            statement.setInt(++columnIndex, getMaxId(DataTables.STUDENTS));
             statement.setString(++columnIndex, student.getFullName());
             statement.setShort(++columnIndex, student.getCourse());
             statement.setInt(++columnIndex, student.getDirectionId());
@@ -104,17 +104,54 @@ public class Database {
         }
     }
 
+    public static void updateStudent(Student student) throws SQLException {
+        String query = "UPDATE students SET" +
+            " full_name = ?, course = ?, " +
+            "direction_id = ?, faculty_id = ?," +
+            "birthday = ?, scholarship = ?, phone = ? WHERE id = ?";
+
+        int columnIndex = 0;
+
+        try(PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(++columnIndex, student.getFullName());
+            statement.setShort(++columnIndex, student.getCourse());
+            statement.setInt(++columnIndex, student.getDirectionId());
+            statement.setInt(++columnIndex, student.getFacultyId());
+            statement.setDate(++columnIndex, Date.valueOf(student.getBirthday()));
+            statement.setFloat(++columnIndex, student.getScholarship());
+            statement.setLong(++columnIndex, student.getPhone());
+            statement.setInt(++columnIndex, student.getId());
+
+            statement.executeUpdate();
+        }
+    }
+
+    public static void createMark(Mark mark) throws SQLException {
+        String query = "INSERT INTO marks VALUES(?, ?, ?, ?, ?)";
+        int columnIndex = 0;
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(++columnIndex, getMaxId(DataTables.MARKS));
+            statement.setInt(++columnIndex, mark.getStudentId());
+            statement.setInt(++columnIndex, mark.getSubjectId());
+            statement.setShort(++columnIndex, mark.getMark());
+            statement.setShort(++columnIndex, mark.getYear());
+
+            statement.executeUpdate();
+        }
+    }
+
     /**
      *
      * @param teacher объект класса Teacher
      */
     public static void createTeacher(Teacher teacher) throws SQLException {
         String query = "INSERT INTO teachers VALUES(?, ?, ?, ?, ?, ?, ?)";
-        int columnIndex = 1;
+        int columnIndex = 0;
 
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(columnIndex, getMaxId(DataTables.TEACHERS));
+            statement.setInt(++columnIndex, getMaxId(DataTables.TEACHERS));
             statement.setString(++columnIndex, teacher.getFullName());
             statement.setFloat(++columnIndex, teacher.getSalary());
             statement.setString(++columnIndex, teacher.getSpecialization());
@@ -126,18 +163,52 @@ public class Database {
         }
     }
 
+    public static void updateTeacher(Teacher teacher) throws SQLException {
+        String query = "UPDATE teachers SET " +
+            "full_name = ?, salary = ?," +
+            "specialization = ?, faculty_id = ?," +
+            "birthday = ?, phone = ? WHERE id = ?";
+
+        int columnIndex = 0;
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(++columnIndex, teacher.getFullName());
+            statement.setFloat(++columnIndex, teacher.getSalary());
+            statement.setString(++columnIndex, teacher.getSpecialization());
+            statement.setInt(++columnIndex, teacher.getFacultyId());
+            statement.setDate(++columnIndex, Date.valueOf(teacher.getBirthday()));
+            statement.setLong(++columnIndex, teacher.getPhone());
+            statement.setInt(++columnIndex, teacher.getId());
+
+            statement.executeUpdate();
+        }
+    }
+
     /**
      *
      * @param group объект класса Group
      */
     public static void createGroup(StudentsGroup group) throws SQLException {
         String query = "INSERT INTO groups VALUES(?, ?, ?)";
-        int columnIndex = 1;
+        int columnIndex = 0;
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(columnIndex, getMaxId(DataTables.GROUPS));
+            statement.setInt(++columnIndex, getMaxId(DataTables.GROUPS));
             statement.setInt(++columnIndex, group.getFacultyId());
             statement.setString(++columnIndex, group.getGroupName());
+
+            statement.executeUpdate();
+        }
+    }
+
+    public static void updateGroup(StudentsGroup group) throws SQLException {
+        String query = "UPDATE groups SET faculty_id = ?, group_name = ? WHERE id = ?";
+        int columnIndex = 0;
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(++columnIndex, group.getFacultyId());
+            statement.setString(++columnIndex, group.getGroupName());
+            statement.setInt(++columnIndex, group.getId());
 
             statement.executeUpdate();
         }
@@ -150,10 +221,10 @@ public class Database {
     public static void createFaculty(Faculty faculty) throws SQLException {
         String query = "INSERT INTO faculties VALUES (?, ?, ?, ?, ?)";
 
-        int columnIndex = 1;
+        int columnIndex = 0;
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(columnIndex, getMaxId(DataTables.FACULTIES));
+            statement.setInt(++columnIndex, getMaxId(DataTables.FACULTIES));
             statement.setString(++columnIndex, faculty.getFacultyName());
             statement.setString(++columnIndex, faculty.getAddress());
             statement.setLong(++columnIndex, faculty.getPhone());
@@ -163,12 +234,30 @@ public class Database {
         }
     }
 
-    public static void createDirection(Direction direction) throws SQLException {
-        String query = "INSERT INTO directions VALUES(?, ?, ?, ?)";
-        int columnIndex = 1;
+    public static void updateFaculty(Faculty faculty) throws SQLException {
+        String query = "UPDATE faculties SET " +
+            "faculty_name = ?, address = ?," +
+            "phone = ?, email = ? WHERE id = ?";
+
+        int columnIndex = 0;
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(columnIndex, getMaxId(DataTables.DIRECTIONS));
+            statement.setString(++columnIndex, faculty.getFacultyName());
+            statement.setString(++columnIndex, faculty.getAddress());
+            statement.setLong(++columnIndex, faculty.getPhone());
+            statement.setString(++columnIndex, faculty.getEmail());
+            statement.setInt(++columnIndex, faculty.getId());
+
+            statement.executeUpdate();
+        }
+    }
+
+    public static void createDirection(Direction direction) throws SQLException {
+        String query = "INSERT INTO directions VALUES(?, ?, ?, ?)";
+        int columnIndex = 0;
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(++columnIndex, getMaxId(DataTables.DIRECTIONS));
             statement.setInt(++columnIndex, direction.getFacultyId());
             statement.setString(++columnIndex, direction.getDirectionName());
             statement.setInt(++columnIndex, direction.getHeadOfDirectionId());
@@ -177,16 +266,50 @@ public class Database {
         }
     }
 
-    public static void createSubject(Subject subject) throws SQLException {
-        String query = "INSERT INTO subjects VALUES(?, ?, ?, ?, ?)";
-        int columnIndex = 1;
+    public static void updateDirection(Direction direction) throws SQLException {
+        String query = "UPDATE directions SET " +
+            "faculty_id = ?, direction_name = ?," +
+            "head = ? WHERE id = ?";
+        int columnIndex = 0;
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(columnIndex, getMaxId(DataTables.SUBJECTS));
+            statement.setInt(++columnIndex, direction.getFacultyId());
+            statement.setString(++columnIndex, direction.getDirectionName());
+            statement.setInt(++columnIndex, direction.getHeadOfDirectionId());
+            statement.setInt(++columnIndex, direction.getId());
+
+            statement.executeUpdate();
+        }
+    }
+
+    public static void createSubject(Subject subject) throws SQLException {
+        String query = "INSERT INTO subjects VALUES(?, ?, ?, ?, ?)";
+        int columnIndex = 0;
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(++columnIndex, getMaxId(DataTables.SUBJECTS));
             statement.setString(++columnIndex, subject.getSubjectName());
             statement.setInt(++columnIndex, subject.getFacultyId());
             statement.setInt(++columnIndex, subject.getDirectionId());
             statement.setInt(++columnIndex, subject.getTeacherId());
+
+            statement.executeUpdate();
+        }
+    }
+
+    public void updateSubject(Subject subject) throws SQLException {
+        String query = "UPDATE subjects SET " +
+            "subject_name = ?, faculty_id = ?," +
+            "direction_id = ?, teacher_id = ? WHERE id = ?";
+
+        int columnIndex = 0;
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(++columnIndex, subject.getSubjectName());
+            statement.setInt(++columnIndex, subject.getFacultyId());
+            statement.setInt(++columnIndex, subject.getDirectionId());
+            statement.setInt(++columnIndex, subject.getTeacherId());
+            statement.setInt(++columnIndex, subject.getId());
 
             statement.executeUpdate();
         }
@@ -200,7 +323,7 @@ public class Database {
      */
     public static ResultSet getData(DataTables tableName, String[] columns, String condition) throws SQLException {
         String query = String.format(
-                "SELECT %s FROM %s %s", String.join(", ", columns), tableName.getTable(), condition
+                "SELECT %s FROM %s %s ORDER BY id", String.join(", ", columns), tableName.getTable(), condition
         );
 
         PreparedStatement statement = connection.prepareStatement(
@@ -221,6 +344,15 @@ public class Database {
         String query = String.format("SELECT %s FROM %s %s", columns, tableName.getTable(), condition);
 
         PreparedStatement statement = connection.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+        return statement.executeQuery();
+    }
+
+    public static ResultSet getData(String query) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(
+                query, ResultSet.TYPE_SCROLL_INSENSITIVE,
+                ResultSet.CONCUR_READ_ONLY
+        );
+
         return statement.executeQuery();
     }
 

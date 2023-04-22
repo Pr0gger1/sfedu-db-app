@@ -5,8 +5,10 @@ import com.pr0gger1.database.DataTables;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class StudentsGroup extends Entity {
+    private final Scanner scanner = new Scanner(System.in);
     private int facultyId;
     private String groupName;
 
@@ -28,12 +30,18 @@ public class StudentsGroup extends Entity {
         return facultyId;
     }
 
+
     public String getGroupName() {
         return groupName;
     }
 
     public void setGroupName(String groupName) {
         this.groupName = groupName;
+    }
+
+    public void setGroupNameFromConsole() {
+        System.out.println("Введите название/номер группы:");
+        setGroupName(scanner.nextLine());
     }
 
     public void setFacultyId(int facultyId) {

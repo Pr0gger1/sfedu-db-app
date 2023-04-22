@@ -6,9 +6,11 @@ import com.pr0gger1.database.DataTables;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class Student extends Human {
-    private int studentId;
+    private final Scanner scanner = new Scanner(System.in);
+
     private int facultyId;
     private int directionId;
     private short course;
@@ -26,9 +28,6 @@ public class Student extends Human {
         this.facultyId = facultyId;
     }
 
-    public int getStudentId() {
-        return studentId;
-    }
     public int getDirectionId() {
         return directionId;
     }
@@ -57,9 +56,6 @@ public class Student extends Human {
         this.birthday = date;
     }
 
-    public void setStudentId(int studentId) {
-        this.studentId = studentId;
-    }
 
     public void setCourse(short course) {
         this.course = course;
@@ -82,6 +78,25 @@ public class Student extends Human {
 
     public void setFacultyId(int facultyId) {
         this.facultyId = facultyId;
+    }
+
+    public void fillStudentData() {
+        System.out.print("Введите ФИО студента:");
+        setFullName(scanner.nextLine());
+
+        System.out.print("Введите номер курса:");
+        setCourse(scanner.nextShort());
+        scanner.nextLine();
+
+        setBirthdayFromConsole();
+
+        System.out.print("Введите размер стипендии (0, если нет): ");
+        setScholarship(scanner.nextFloat());
+        scanner.nextLine();
+
+        System.out.print("Введите номер телефона:");
+        setPhone(scanner.nextLong());
+        scanner.nextLine();
     }
 
     @Override

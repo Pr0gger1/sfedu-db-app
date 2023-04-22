@@ -2,13 +2,12 @@ package com.pr0gger1.app.menu.commands.write;
 
 import com.pr0gger1.app.entities.Faculty;
 import com.pr0gger1.app.entities.StudentsGroup;
-import com.pr0gger1.app.menu.commands.ConsoleGetter;
+import com.pr0gger1.app.menu.commands.Command;
 import com.pr0gger1.database.Database;
 
 import java.sql.SQLException;
-import java.util.Scanner;
 
-public class SetFacultyGroup extends ConsoleGetter {
+public class SetFacultyGroup extends Command {
     Faculty faculty = new Faculty();
     StudentsGroup newStudentsGroup = new StudentsGroup();
 
@@ -23,7 +22,8 @@ public class SetFacultyGroup extends ConsoleGetter {
 
             if (faculty.getEntityTable().getRowsCount() > 0) {
                 while (true) {
-                    chosenFacultyId = getFacultyIdFromConsole(faculty);
+                    faculty.setIdFromConsole("факультет");
+                    chosenFacultyId = faculty.getId();
 
                     if (chosenFacultyId == 0) return;
 
@@ -33,9 +33,9 @@ public class SetFacultyGroup extends ConsoleGetter {
                         continue;
                     }
 
-                    getStudentGroupName(newStudentsGroup);
-
+                    newStudentsGroup.setGroupNameFromConsole();
                     newStudentsGroup.setFacultyId(chosenFacultyId);
+
                     Database.createGroup(newStudentsGroup);
                     System.out.println("Данные успешно добавлены");
                 }

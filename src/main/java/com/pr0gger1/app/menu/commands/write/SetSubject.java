@@ -4,20 +4,18 @@ import com.pr0gger1.app.entities.Direction;
 import com.pr0gger1.app.entities.Faculty;
 import com.pr0gger1.app.entities.Subject;
 import com.pr0gger1.app.entities.Teacher;
-import com.pr0gger1.app.menu.commands.ConsoleGetter;
+import com.pr0gger1.app.menu.commands.Command;
 import com.pr0gger1.database.Database;
 
 import java.sql.SQLException;
-import java.util.Scanner;
 
-public class SetSubject extends ConsoleGetter {
+public class SetSubject extends Command {
     public SetSubject(int id, String title) {
         super(id, title);
     }
 
     @Override
     public void execute() {
-        Scanner scanner = new Scanner(System.in);
         Faculty faculty = new Faculty();
 
         if (faculty.getEntityTable().getRowsCount() > 0) {
@@ -26,7 +24,8 @@ public class SetSubject extends ConsoleGetter {
             int chosenTeacherId;
 
             while (true) {
-                chosenFacultyId = getFacultyIdFromConsole(faculty);
+                faculty.setIdFromConsole("факультет");
+                chosenFacultyId = faculty.getId();
 
                 if (chosenFacultyId == 0) return;
                 if (!faculty.getEntityTable().fieldExists(chosenFacultyId)) {
@@ -35,28 +34,16 @@ public class SetSubject extends ConsoleGetter {
                 }
 
                 Direction direction = new Direction(chosenFacultyId);
-                direction.printEntityTable();
-
-                chosenDirectionId = getDirectionIdFromConsole(direction);
-
-                if (!direction.getEntityTable().fieldExists(chosenDirectionId)) {
-                    System.out.println("Неверный ID");
-                    continue;
-                }
+                direction.setIdFromConsole("направление подготовки");
+                chosenDirectionId = direction.getId();
 
                 Teacher teacher = new Teacher(chosenFacultyId);
-                teacher.printEntityTable();
 
-                chosenTeacherId = getTeacherIdFromConsole(teacher);
-
-                if (!teacher.getEntityTable().fieldExists(chosenTeacherId)) {
-                    System.out.println("Неверный ID");
-                    continue;
-                }
+                teacher.setIdFromConsole("преподавателя");
+                chosenTeacherId = teacher.getId();
 
                 Subject newSubject = new Subject();
-                System.out.print("Введите название предмета: ");
-                newSubject.setSubjectName(scanner.nextLine());
+                newSubject.setSubjectNameFromConsole();
                 newSubject.setDirectionId(chosenDirectionId);
                 newSubject.setFacultyId(chosenFacultyId);
                 newSubject.setTeacherId(chosenTeacherId);

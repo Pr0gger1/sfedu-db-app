@@ -7,12 +7,17 @@ import com.pr0gger1.database.Database;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public abstract class Entity {
+    private final Scanner scanner = new Scanner(System.in);
+    protected int id;
+
     Table entityTable;
     private final DataTables entityTableName;
+    private ArrayList<String> localizedColumns = new ArrayList<>();
+    private String currentQuery = "SELECT %s FROM %s ORDER BY id";
 
-    private String currentQuery = "SELECT %s FROM %s";
 
     protected Entity(DataTables table, ArrayList<String> columns) {
         entityTableName = table;
@@ -64,5 +69,53 @@ public abstract class Entity {
 
     public void printEntityTable() {
         System.out.println(getEntityTable());
+    }
+
+    public ArrayList<String> getLocalizedColumns() {
+        return localizedColumns;
+    }
+
+    public void setLocalizedColumns(ArrayList<String> localizedColumns) {
+        this.localizedColumns = localizedColumns;
+    }
+
+    public void setIdFromConsole(String entityName) {
+        if (getEntityTable().getRowsCount() == 0) {
+            System.out.println("В базе данных отсутствуют данные");
+            return;
+        }
+        while (true) {
+            printEntityTable();
+
+            System.out.printf("Выберите %s или 0 для выхода: ", entityName);
+            id = scanner.nextInt();
+            scanner.nextLine();
+
+            if (!getEntityTable().fieldExists(id)) System.out.println("Неверный ID");
+            else break;
+        }
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void fillEntity() {}
+    public void updateData(ArrayList<Runnable> setters) {
+        System.out.println("Какие данные желаете изменить?");
+        for (int i = 0; i < getLocalizedColumns().size(); i++) {
+            if (i == 0) System.out.printf("%d. Выход%n", i);
+            System.out.printf("%d. %s%n", i + 1, getLocalizedColumns().get(i));
+        }
+
+        int chosenPoint = scanner.nextInt();
+        scanner.nextLine();
+
+        if (chosenPoint == 0) return;
+        setters.get(chosenPoint - 1).run();
     }
 }
