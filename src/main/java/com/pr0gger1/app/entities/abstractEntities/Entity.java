@@ -1,6 +1,7 @@
 package com.pr0gger1.app.entities.abstractEntities;
 
 import com.pr0gger1.app.ConsoleTable.Table;
+import com.pr0gger1.exceptions.CancelIOException;
 import com.pr0gger1.exceptions.TooManyRowsException;
 import com.pr0gger1.database.DataTables;
 import com.pr0gger1.database.Database;
@@ -79,19 +80,29 @@ public abstract class Entity {
         this.localizedColumns = localizedColumns;
     }
 
-    public void setIdFromConsole(String entityName) {
+    public void setIdFromConsole() throws CancelIOException {
         if (getEntityTable().getRowsCount() == 0) {
             System.out.println("В базе данных отсутствуют данные");
             return;
         }
         while (true) {
             printEntityTable();
+            String message = "Выберите %s или 0 для выхода: ";
 
-            System.out.printf("Выберите %s или 0 для выхода: ", entityName);
+            switch (entityTableName) {
+                case DIRECTIONS -> System.out.printf(message, "направление подготовки");
+                case FACULTIES -> System.out.printf(message, "факультет");
+                case GROUPS -> System.out.printf(message, "студенческую группу");
+                case STUDENTS -> System.out.printf(message, "студента");
+                case SUBJECTS -> System.out.printf(message, "предмет");
+                case MARKS -> System.out.printf(message, "балл за экзамен");
+                case EMPLOYEES -> System.out.printf(message, "преподавателя");
+            }
             id = scanner.nextInt();
             scanner.nextLine();
 
-            if (!getEntityTable().fieldExists(id)) System.out.println("Неверный ID");
+            if (id == 0) throw new CancelIOException("Отменен ввод данных");
+            else if (!getEntityTable().fieldExists(id)) System.out.println("Неверный ID");
             else break;
         }
     }

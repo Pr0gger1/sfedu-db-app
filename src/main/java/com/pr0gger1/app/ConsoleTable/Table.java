@@ -3,6 +3,9 @@ package com.pr0gger1.app.ConsoleTable;
 import com.pr0gger1.exceptions.TooManyColumnsException;
 import com.pr0gger1.exceptions.TooManyRowsException;
 
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -167,6 +170,25 @@ public class Table {
             return values;
         }
         return null;
+    }
+
+    public void fillTable(ResultSet queryResult) {
+        try {
+            ResultSetMetaData entityMetaData = queryResult.getMetaData();
+            int columnCount = entityMetaData.getColumnCount();
+
+            while (queryResult.next()) {
+                ArrayList<Object> row = new ArrayList<>();
+                for (int i = 1; i <= columnCount; i++) {
+                    row.add(queryResult.getObject(i));
+                }
+
+                addRow(row);
+            }
+        }
+        catch (SQLException | TooManyRowsException error) {
+            error.printStackTrace();
+        }
     }
 
     @Override

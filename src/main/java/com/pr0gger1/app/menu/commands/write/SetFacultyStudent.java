@@ -5,6 +5,7 @@ import com.pr0gger1.app.entities.Faculty;
 import com.pr0gger1.app.entities.Student;
 import com.pr0gger1.app.menu.commands.Command;
 import com.pr0gger1.database.Database;
+import com.pr0gger1.exceptions.CancelIOException;
 
 import java.sql.SQLException;
 
@@ -18,12 +19,12 @@ public class SetFacultyStudent extends Command {
         Student newStudent = new Student();
         Faculty faculty = new Faculty();
 
-        try {
-            int chosenDirectionId;
-            int chosenFacultyId;
+        int chosenDirectionId;
+        int chosenFacultyId;
 
-            while (true) {
-                faculty.setIdFromConsole("факультет");
+        while (true) {
+            try {
+                faculty.setIdFromConsole();
                 chosenFacultyId = faculty.getId();
 
                 if (chosenFacultyId == 0) return;
@@ -38,7 +39,7 @@ public class SetFacultyStudent extends Command {
                     return;
                 }
 
-                facultyDirections.setIdFromConsole("направление подготовки");
+                facultyDirections.setIdFromConsole();
                 chosenDirectionId = facultyDirections.getId();
 
                 if (!facultyDirections.getEntityTable().fieldExists(chosenDirectionId)) {
@@ -53,9 +54,14 @@ public class SetFacultyStudent extends Command {
                 Database.createStudent(newStudent);
                 System.out.println("Студент создан!");
             }
-        }
-        catch (SQLException error) {
-            error.printStackTrace();
+            catch (SQLException error) {
+                error.printStackTrace();
+            }
+            catch (CancelIOException cancelException) {
+                System.out.println(cancelException.getMessage());
+                return;
+            }
+
         }
     }
 }

@@ -2,17 +2,15 @@ package com.pr0gger1.app.menu.commands.read;
 
 import com.pr0gger1.app.ConsoleTable.Table;
 import com.pr0gger1.app.entities.Faculty;
-import com.pr0gger1.exceptions.TooManyRowsException;
+import com.pr0gger1.exceptions.CancelIOException;
 import com.pr0gger1.app.menu.commands.Command;
 import com.pr0gger1.database.DataTables;
 import com.pr0gger1.database.Database;
 
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Scanner;
 
 public class GetFacultyStudents extends Command {
 
@@ -29,9 +27,11 @@ public class GetFacultyStudents extends Command {
         ));
 
         Table studentTable = new Table(captions);
+        Faculty faculty = new Faculty();
 
         try {
-            int chosenFacultyId = getFacultyIdFromConsole();
+            faculty.setIdFromConsole();
+            int chosenFacultyId = faculty.getId();
 
             String[] columns = {
                 "students.id", "full_name", "course", "direction_id",
@@ -48,45 +48,15 @@ public class GetFacultyStudents extends Command {
                 )
             );
 
-            generateAndPrintTable(students, studentTable);
+            studentTable.fillTable(students);
+            System.out.println(studentTable);
 
         }
         catch (SQLException error) {
             error.printStackTrace();
         }
-    }
-
-    public int getFacultyIdFromConsole() {
-        Scanner scanner = new Scanner(System.in);
-        Faculty faculties = new Faculty();
-
-        System.out.print("Выберите факультет: ");
-        faculties.printEntityTable();
-
-        int chosenFacultyId = scanner.nextInt();
-        scanner.nextLine();
-
-        return chosenFacultyId;
-    }
-
-    public void generateAndPrintTable(ResultSet students, Table studentTable) {
-        try {
-            ResultSetMetaData studentMetadata = students.getMetaData();
-
-            while (students.next()) {
-                ArrayList<Object> row = new ArrayList<>();
-
-                for (int i = 1; i <= studentMetadata.getColumnCount(); i++) {
-                    row.add(students.getObject(i));
-                }
-
-                studentTable.addRow(row);
-            }
-
-            System.out.println(studentTable);
-        }
-        catch (SQLException | TooManyRowsException error) {
-            error.printStackTrace();
+        catch (CancelIOException cancelException) {
+            System.out.println(cancelException.getMessage());
         }
     }
 }

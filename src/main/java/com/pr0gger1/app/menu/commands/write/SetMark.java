@@ -19,7 +19,8 @@ public class SetMark extends Command {
 
     @Override
     public void execute() {
-        while (true) {
+        if (currentStudent.getEntityTable().getRowsCount() > 0) {
+            while (true) {
             try {
                 mark.setStudentIdName(currentStudent);
                 boolean isChosen = false;
@@ -36,7 +37,7 @@ public class SetMark extends Command {
                         )
                     );
 
-                    subject.setIdFromConsole("предмет");
+                    subject.setIdFromConsole();
                     int chosenSubjectId = subject.getId();
 
                     mark.setSubjectId(chosenSubjectId);
@@ -44,18 +45,15 @@ public class SetMark extends Command {
                 }
                 mark.setMarkFromConsole();
                 mark.setYearFromConsole();
-            }
-            catch (CancelIOException cancelError) {
-                return;
-            }
 
-            try {
                 Database.createMark(mark);
                 System.out.println("Данные успешно добавлены");
             }
-            catch (SQLException error) {
-                error.printStackTrace();
+            catch (SQLException error) {error.printStackTrace();}
+            catch (CancelIOException cancelError) {return;}
             }
         }
+        else System.out.println("В базе данных отсутствуют студенты");
+
     }
 }

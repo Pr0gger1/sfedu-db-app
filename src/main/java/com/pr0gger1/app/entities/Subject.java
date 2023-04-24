@@ -26,9 +26,14 @@ public class Subject extends Entity {
     public Subject(int facultyId) {
         super(
             DataTables.SUBJECTS,
-            "SELECT subj.id, subj.subject_name, f.faculty_name, t.full_name" +
-                    " FROM subjects subj join faculties f on subj.faculty_id = f.id" +
-                    " join teachers t on subj.teacher_id = t.id"
+            String.format(
+                "SELECT subj.id, subj.subject_name, f.faculty_name, e.full_name" +
+                " FROM %s subj join %s f on subj.faculty_id = f.id" +
+                " join %s e on subj.employee_id = e.id",
+                DataTables.SUBJECTS.getTable(),
+                DataTables.FACULTIES.getTable(),
+                DataTables.EMPLOYEES.getTable()
+            )
         );
         this.facultyId = facultyId;
     }

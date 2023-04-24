@@ -2,12 +2,13 @@ package com.pr0gger1.app.entities;
 
 import com.pr0gger1.app.entities.abstractEntities.Human;
 import com.pr0gger1.database.DataTables;
+import com.pr0gger1.exceptions.CancelIOException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class Teacher extends Human {
+public class Employee extends Human {
     private final Scanner scanner = new Scanner(System.in);
 
     private int facultyId;
@@ -16,21 +17,21 @@ public class Teacher extends Human {
     private String specialization;
     private float salary;
 
-    public Teacher(int facultyId) {
+    public Employee(int facultyId) {
         super(
-            DataTables.TEACHERS,
+            DataTables.EMPLOYEES,
             String.format(
                 "SELECT id, full_name FROM %s" +
                 " WHERE id NOT IN (SELECT head FROM %s)" +
                 " AND faculty_id = (SELECT faculty_id FROM directions WHERE faculty_id = %d)",
-                    DataTables.TEACHERS, DataTables.DIRECTIONS, facultyId
+                    DataTables.EMPLOYEES, DataTables.DIRECTIONS, facultyId
             )
         );
         this.facultyId = facultyId;
     }
 
-    public Teacher() {
-        super(DataTables.TEACHERS, new ArrayList<>(Arrays.asList("id", "full_name")));
+    public Employee() {
+        super(DataTables.EMPLOYEES, new ArrayList<>(Arrays.asList("id", "full_name")));
     }
 
     public int getFacultyId() {
@@ -73,7 +74,7 @@ public class Teacher extends Human {
         facultyId = id;
     }
 
-    public void setTeacherDataFromConsole() {
+    public void setEmployeeDataFromConsole() {
         System.out.println("Введите ФИО преподавателя: ");
         setFullName(scanner.nextLine());
 
@@ -92,22 +93,22 @@ public class Teacher extends Human {
     }
 
     @Override
-    public void setIdFromConsole(String entityName) {
+    public void setIdFromConsole() throws CancelIOException {
         setCurrentQuery(
             String.format(
-                "SELECT id, full_name FROM teachers " +
-                "WHERE id NOT IN (SELECT s.teacher_id FROM directions d JOIN subjects s ON d.head != s.teacher_id) " +
+                "SELECT id, full_name FROM %s " +
+                "WHERE id NOT IN (SELECT s.employee_id FROM directions d JOIN subjects s ON d.head != s.employee_id) " +
                 "AND faculty_id = (SELECT faculty_id FROM directions WHERE faculty_id = %d)",
-                facultyId
+                DataTables.EMPLOYEES.getTable(), facultyId
             )
         );
-        super.setIdFromConsole(entityName);
+        super.setIdFromConsole();
     }
 
     @Override
     public String toString() {
         return String.format(
-            "Teacher: {\n" +
+            "Employee: {\n" +
             "\nfacultyId: %d," +
             "\nfull_name: %s," +
             "\nphone: %d," +

@@ -1,9 +1,9 @@
 package com.pr0gger1.app.menu.commands.read;
 
 import com.pr0gger1.app.ConsoleTable.Table;
-import com.pr0gger1.exceptions.TooManyRowsException;
+import com.pr0gger1.app.entities.Faculty;
+import com.pr0gger1.exceptions.CancelIOException;
 import com.pr0gger1.app.menu.commands.Command;
-import com.pr0gger1.database.DataTables;
 import com.pr0gger1.database.Database;
 
 import java.sql.ResultSet;
@@ -16,32 +16,21 @@ public class GetFacultyGroups extends Command {
 
     @Override
     public void execute() {
-        Table table = new Table("Название группы", "Факультет");
-        int count = 0;
+        Table groupTable = new Table("ID", "Название");
+        Faculty faculty = new Faculty();
 
         try {
-            ResultSet groupData = Database.getData(DataTables.GROUPS, "*", "");
-            while (groupData.next()) {
-                count++;
+            faculty.setIdFromConsole();
+            String query = String.format(
+                "SELECT id, group_name FROM groups WHERE faculty_id = %s ORDER BY id",
+                faculty.getId()
+            );
 
-                int facultyId = groupData.getInt("faculty_id");
-                String groupName = groupData.getString("group_name");
-
-                String facultyFilter = String.format("WHERE id = %d", facultyId);
-                ResultSet facultyName = Database.getData(
-                    DataTables.FACULTIES, "faculty_name", facultyFilter
-                );
-
-                if (facultyName.first()) {
-                    table.addRow(groupName, facultyName.getString("faculty_name"));
-                }
-                else System.out.println("Факультеты еще не добавлены в базу");
-            }
-
-            if (count == 0) System.out.println("Группы еще не добавлены");
-            else System.out.println(table);
+            ResultSet groupQueryResult = Database.getData(query);
+            groupTable.fillTable(groupQueryResult);
+            System.out.println(groupTable);
         }
-        catch (SQLException | TooManyRowsException error) {
+        catch (SQLException | CancelIOException error) {
             error.printStackTrace();
         }
     }

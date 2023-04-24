@@ -3,9 +3,10 @@ package com.pr0gger1.app.menu.commands.write;
 import com.pr0gger1.app.entities.Direction;
 import com.pr0gger1.app.entities.Faculty;
 import com.pr0gger1.app.entities.Subject;
-import com.pr0gger1.app.entities.Teacher;
+import com.pr0gger1.app.entities.Employee;
 import com.pr0gger1.app.menu.commands.Command;
 import com.pr0gger1.database.Database;
+import com.pr0gger1.exceptions.CancelIOException;
 
 import java.sql.SQLException;
 
@@ -24,36 +25,42 @@ public class SetSubject extends Command {
             int chosenTeacherId;
 
             while (true) {
-                faculty.setIdFromConsole("факультет");
-                chosenFacultyId = faculty.getId();
-
-                if (chosenFacultyId == 0) return;
-                if (!faculty.getEntityTable().fieldExists(chosenFacultyId)) {
-                    System.out.println("Неверный ID");
-                    continue;
-                }
-
-                Direction direction = new Direction(chosenFacultyId);
-                direction.setIdFromConsole("направление подготовки");
-                chosenDirectionId = direction.getId();
-
-                Teacher teacher = new Teacher(chosenFacultyId);
-
-                teacher.setIdFromConsole("преподавателя");
-                chosenTeacherId = teacher.getId();
-
-                Subject newSubject = new Subject();
-                newSubject.setSubjectNameFromConsole();
-                newSubject.setDirectionId(chosenDirectionId);
-                newSubject.setFacultyId(chosenFacultyId);
-                newSubject.setTeacherId(chosenTeacherId);
-
                 try {
-                    Database.createSubject(newSubject);
-                    System.out.println("Предмет успешно добавлен");
+                    faculty.setIdFromConsole();
+                    chosenFacultyId = faculty.getId();
+
+                    if (chosenFacultyId == 0) return;
+                    if (!faculty.getEntityTable().fieldExists(chosenFacultyId)) {
+                        System.out.println("Неверный ID");
+                        continue;
+                    }
+
+                    Direction direction = new Direction(chosenFacultyId);
+                    direction.setIdFromConsole();
+                    chosenDirectionId = direction.getId();
+
+                    Employee employee = new Employee(chosenFacultyId);
+
+                    employee.setIdFromConsole();
+                    chosenTeacherId = employee.getId();
+
+                    Subject newSubject = new Subject();
+                    newSubject.setSubjectNameFromConsole();
+                    newSubject.setDirectionId(chosenDirectionId);
+                    newSubject.setFacultyId(chosenFacultyId);
+                    newSubject.setTeacherId(chosenTeacherId);
+
+                    try {
+                        Database.createSubject(newSubject);
+                        System.out.println("Предмет успешно добавлен");
+                    }
+                    catch (SQLException error) {
+                        error.printStackTrace();
+                    }
                 }
-                catch (SQLException error) {
-                    error.printStackTrace();
+                catch (CancelIOException cancelException) {
+                    System.out.println(cancelException.getMessage());
+                    return;
                 }
             }
         }

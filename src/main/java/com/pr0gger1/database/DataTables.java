@@ -5,7 +5,7 @@ public enum DataTables {
     DIRECTIONS("directions"),
     GROUPS("groups"),
     MARKS("marks"),
-    TEACHERS("teachers"),
+    EMPLOYEES("employees"),
     STUDENTS("students"),
     SUBJECTS("subjects"),
     ;

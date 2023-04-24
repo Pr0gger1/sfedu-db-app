@@ -1,7 +1,6 @@
 package com.pr0gger1.app.menu.commands.read;
 
 import com.pr0gger1.app.ConsoleTable.Table;
-import com.pr0gger1.exceptions.TooManyRowsException;
 import com.pr0gger1.app.menu.commands.Command;
 import com.pr0gger1.database.DataTables;
 import com.pr0gger1.database.Database;
@@ -16,22 +15,13 @@ public class GetFaculties extends Command {
 
     @Override
     public void execute() {
-        Table facultyTable = new Table("Название", "Адрес", "Email", "Телефон");
+        Table facultyTable = new Table("ID", "Название", "Адрес", "Email", "Телефон");
         try {
-            ResultSet faculties = Database.getData(DataTables.FACULTIES, "*", "");
-
-            while (faculties.next()) {
-                String facultyName = faculties.getString("faculty_name");
-                String address = faculties.getString("address");
-                String email = faculties.getString("email");
-                long phone = faculties.getLong("phone");
-
-                facultyTable.addRow(facultyName, address, email, phone);
-            }
-
+            ResultSet facultyQueryResult = Database.getData(DataTables.FACULTIES, "*", "ORDER BY id");
+            facultyTable.fillTable(facultyQueryResult);
             System.out.println(facultyTable);
         }
-        catch (SQLException | TooManyRowsException error) {
+        catch (SQLException error) {
             error.printStackTrace();
         }
     }

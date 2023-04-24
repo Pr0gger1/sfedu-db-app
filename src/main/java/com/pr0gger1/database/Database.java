@@ -143,28 +143,29 @@ public class Database {
 
     /**
      *
-     * @param teacher объект класса Teacher
+     * @param employee объект класса Employee
      */
-    public static void createTeacher(Teacher teacher) throws SQLException {
-        String query = "INSERT INTO teachers VALUES(?, ?, ?, ?, ?, ?, ?)";
+    public static void createEmployee(Employee employee) throws SQLException {
+        String query = "INSERT INTO ? VALUES(?, ?, ?, ?, ?, ?, ?)";
         int columnIndex = 0;
 
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(++columnIndex, getMaxId(DataTables.TEACHERS));
-            statement.setString(++columnIndex, teacher.getFullName());
-            statement.setFloat(++columnIndex, teacher.getSalary());
-            statement.setString(++columnIndex, teacher.getSpecialization());
-            statement.setInt(++columnIndex, teacher.getFacultyId());
-            statement.setDate(++columnIndex, Date.valueOf(teacher.getBirthday()));
-            statement.setLong(++columnIndex, teacher.getPhone());
+            statement.setString(++columnIndex, DataTables.EMPLOYEES.getTable());
+            statement.setInt(++columnIndex, getMaxId(DataTables.EMPLOYEES));
+            statement.setString(++columnIndex, employee.getFullName());
+            statement.setFloat(++columnIndex, employee.getSalary());
+            statement.setString(++columnIndex, employee.getSpecialization());
+            statement.setInt(++columnIndex, employee.getFacultyId());
+            statement.setDate(++columnIndex, Date.valueOf(employee.getBirthday()));
+            statement.setLong(++columnIndex, employee.getPhone());
 
             statement.executeUpdate();
         }
     }
 
-    public static void updateTeacher(Teacher teacher) throws SQLException {
-        String query = "UPDATE teachers SET " +
+    public static void updateEmployee(Employee employee) throws SQLException {
+        String query = "UPDATE ? SET " +
             "full_name = ?, salary = ?," +
             "specialization = ?, faculty_id = ?," +
             "birthday = ?, phone = ? WHERE id = ?";
@@ -172,13 +173,14 @@ public class Database {
         int columnIndex = 0;
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(++columnIndex, teacher.getFullName());
-            statement.setFloat(++columnIndex, teacher.getSalary());
-            statement.setString(++columnIndex, teacher.getSpecialization());
-            statement.setInt(++columnIndex, teacher.getFacultyId());
-            statement.setDate(++columnIndex, Date.valueOf(teacher.getBirthday()));
-            statement.setLong(++columnIndex, teacher.getPhone());
-            statement.setInt(++columnIndex, teacher.getId());
+            statement.setString(++columnIndex, DataTables.EMPLOYEES.getTable());
+            statement.setString(++columnIndex, employee.getFullName());
+            statement.setFloat(++columnIndex, employee.getSalary());
+            statement.setString(++columnIndex, employee.getSpecialization());
+            statement.setInt(++columnIndex, employee.getFacultyId());
+            statement.setDate(++columnIndex, Date.valueOf(employee.getBirthday()));
+            statement.setLong(++columnIndex, employee.getPhone());
+            statement.setInt(++columnIndex, employee.getId());
 
             statement.executeUpdate();
         }
@@ -300,7 +302,7 @@ public class Database {
     public void updateSubject(Subject subject) throws SQLException {
         String query = "UPDATE subjects SET " +
             "subject_name = ?, faculty_id = ?," +
-            "direction_id = ?, teacher_id = ? WHERE id = ?";
+            "direction_id = ?, employee_id = ? WHERE id = ?";
 
         int columnIndex = 0;
 
@@ -323,7 +325,7 @@ public class Database {
      */
     public static ResultSet getData(DataTables tableName, String[] columns, String condition) throws SQLException {
         String query = String.format(
-                "SELECT %s FROM %s %s ORDER BY id", String.join(", ", columns), tableName.getTable(), condition
+                "SELECT %s FROM %s %s", String.join(", ", columns), tableName.getTable(), condition
         );
 
         PreparedStatement statement = connection.prepareStatement(
