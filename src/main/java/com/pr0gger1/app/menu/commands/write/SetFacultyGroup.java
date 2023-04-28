@@ -1,7 +1,7 @@
 package com.pr0gger1.app.menu.commands.write;
 
 import com.pr0gger1.app.entities.Faculty;
-import com.pr0gger1.app.entities.StudentsGroup;
+import com.pr0gger1.app.entities.StudentGroup;
 import com.pr0gger1.app.menu.commands.Command;
 import com.pr0gger1.database.Database;
 import com.pr0gger1.exceptions.CancelInputException;
@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 public class SetFacultyGroup extends Command {
     Faculty faculty = new Faculty();
-    StudentsGroup newStudentsGroup = new StudentsGroup();
+    StudentGroup newStudentGroup = new StudentGroup();
 
     public SetFacultyGroup(int id, String title) {
         super(id, title);}
@@ -25,10 +25,10 @@ public class SetFacultyGroup extends Command {
                     faculty.setIdFromConsole();
                     chosenFacultyId = faculty.getId();
 
-                    newStudentsGroup.setGroupNameFromConsole();
-                    newStudentsGroup.setFacultyId(chosenFacultyId);
+                    newStudentGroup.setGroupNameFromConsole();
+                    newStudentGroup.setFacultyId(chosenFacultyId);
 
-                    Database.createGroup(newStudentsGroup);
+                    Database.createGroup(newStudentGroup);
                     System.out.println("Данные успешно добавлены");
 
                 }

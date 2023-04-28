@@ -16,7 +16,7 @@ public abstract class Entity {
     protected int id;
 
     Table entityTable;
-    private final DataTables entityTableName;
+    public final DataTables entityTableName;
     private ArrayList<String> localizedColumns = new ArrayList<>();
     private String currentQuery = "SELECT %s FROM %s ORDER BY id";
 

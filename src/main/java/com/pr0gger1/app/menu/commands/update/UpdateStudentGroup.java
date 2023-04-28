@@ -1,7 +1,7 @@
 package com.pr0gger1.app.menu.commands.update;
 
 import com.pr0gger1.app.entities.Faculty;
-import com.pr0gger1.app.entities.StudentsGroup;
+import com.pr0gger1.app.entities.StudentGroup;
 import com.pr0gger1.app.menu.commands.Command;
 import com.pr0gger1.database.DataTables;
 import com.pr0gger1.database.Database;
@@ -16,7 +16,7 @@ public class UpdateStudentGroup extends Command {
 
     @Override
     public void execute() {
-        StudentsGroup group = new StudentsGroup();
+        StudentGroup group = new StudentGroup();
         Faculty faculty = new Faculty();
         try {
             faculty.setIdFromConsole();

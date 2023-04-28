@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.*;
 
 import com.pr0gger1.app.ConsoleTable.Table;
+import com.pr0gger1.app.entities.abstractEntities.Entity;
 import com.pr0gger1.exceptions.TooManyRowsException;
 import com.pr0gger1.app.entities.*;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -57,28 +58,16 @@ public class Database {
         return newId;
     }
 
-    /**
-     * @param tableName имя таблицы, в которую добавляются данные
-     * @param columns массив строк с колонками таблицы, по которым производится добавление данных
-     * @param values значения колонок таблицы
-     */
-    public static void createRow(DataTables tableName, String[] columns, String[] values) throws SQLException {
-        StringBuilder insertValues = new StringBuilder("(");
-
-        for (String column : columns)
-            insertValues.append(column).append(", ");
-
-        insertValues.append(")");
-
+    public static void deleteEntityRow(Entity entity) throws SQLException {
         String query = String.format(
-                "INSERT INTO %s %s VALUES(%s)", tableName.getTable(),
-                insertValues, String.join(", ", values)
+            "DELETE FROM %s WHERE id = %d",
+            entity.entityTableName.getTable(),
+            entity.getId()
         );
 
-        System.out.println(query);
-
-        PreparedStatement statement = connection.prepareStatement(query);
-        statement.executeUpdate();
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.executeUpdate();
+        }
     }
 
     /**
@@ -194,7 +183,7 @@ public class Database {
      *
      * @param group объект класса Group
      */
-    public static void createGroup(StudentsGroup group) throws SQLException {
+    public static void createGroup(StudentGroup group) throws SQLException {
         String query = "INSERT INTO %s VALUES(?, ?, ?)";
         int columnIndex = 0;
         query = String.format(query, DataTables.GROUPS.getTable());
@@ -208,7 +197,7 @@ public class Database {
         }
     }
 
-    public static void updateGroup(StudentsGroup group) throws SQLException {
+    public static void updateGroup(StudentGroup group) throws SQLException {
         String query = "UPDATE %s SET faculty_id = ?, group_name = ? WHERE id = ?";
         int columnIndex = 0;
         query = String.format(query, DataTables.GROUPS.getTable());

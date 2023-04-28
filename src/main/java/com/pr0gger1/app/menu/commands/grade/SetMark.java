@@ -1,4 +1,4 @@
-package com.pr0gger1.app.menu.commands.write;
+package com.pr0gger1.app.menu.commands.grade;
 
 import com.pr0gger1.app.entities.Mark;
 import com.pr0gger1.app.entities.Student;

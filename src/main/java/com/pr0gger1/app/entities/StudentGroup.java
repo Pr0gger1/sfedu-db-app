@@ -12,25 +12,25 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class StudentsGroup extends Entity {
+public class StudentGroup extends Entity {
     private final Scanner scanner = new Scanner(System.in);
     private int facultyId;
     private String groupName;
 
-    public StudentsGroup(int facultyId) {
+    public StudentGroup(int facultyId) {
         super(DataTables.GROUPS, new ArrayList<>(Arrays.asList("id", "group_name")));
         this.facultyId = facultyId;
         setLocalizedColumns(new ArrayList<>(Arrays.asList("Факультет", "Название группы")));
     }
 
-    public StudentsGroup(int facultyId, String groupName) {
+    public StudentGroup(int facultyId, String groupName) {
         super(DataTables.GROUPS, new ArrayList<>(Arrays.asList("id", "group_name")));
         setLocalizedColumns(new ArrayList<>(Arrays.asList("Факультет", "Название группы")));
         this.facultyId = facultyId;
         this.groupName = groupName;
     }
 
-    public StudentsGroup() {
+    public StudentGroup() {
         super(DataTables.GROUPS, new ArrayList<>(Arrays.asList("id", "group_name")));
         setLocalizedColumns(new ArrayList<>(Arrays.asList("Факультет", "Название группы")));
     }

@@ -1,6 +1,6 @@
-package com.pr0gger1.app.menu.commands.delete;
+package com.pr0gger1.app.menu.commands.grade;
 
-import com.pr0gger1.app.entities.Faculty;
+import com.pr0gger1.app.entities.Mark;
 import com.pr0gger1.app.entities.Student;
 import com.pr0gger1.app.menu.commands.Command;
 import com.pr0gger1.database.DataTables;
@@ -9,26 +9,27 @@ import com.pr0gger1.exceptions.CancelInputException;
 
 import java.sql.SQLException;
 
-public class DeleteStudent extends Command {
-    public DeleteStudent(int id, String title) {
+public class DeleteMark extends Command {
+    public DeleteMark(int id, String title) {
         super(id, title);
     }
 
     @Override
     public void execute() {
-        Faculty faculty = new Faculty();
         Student student = new Student();
+        Mark mark = new Mark();
         try {
-            faculty.setIdFromConsole();
-            student.setCurrentQuery(String.format(
-                "SELECT * FROM %s WHERE faculty_id = %d",
-                DataTables.STUDENTS.getTable(),
-                faculty.getId()
+            student.searchStudent();
+            mark.setCurrentQuery(String.format(
+                "SELECT * FROM %s WHERE student_id = %d",
+                DataTables.MARKS.getTable(),
+                student.getId()
             ));
+            mark.setIdFromConsole();
 
-            student.setIdFromConsole();
-            Database.deleteEntityRow(student);
-            System.out.println("Данные успешно удалены");
+            Database.deleteEntityRow(mark);
+            if (mark.getId() != 0)
+                System.out.println("Данные успешно удалены");
         }
         catch (SQLException error) {
             error.printStackTrace();

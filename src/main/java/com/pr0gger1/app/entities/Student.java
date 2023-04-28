@@ -262,7 +262,7 @@ public class Student extends Human {
 
                 int chosenStudentId;
                 if (studentTable.getRowsCount() > 1) {
-                    System.out.println("Ваш запрос вернул больше 1 запроса, выберите конкретного студента");
+                    System.out.println("Ваш запрос вернул больше 1 строки, выберите конкретного студента (ID)");
                     chosenStudentId = scanner.nextInt();
                     scanner.nextLine();
 
@@ -271,12 +271,13 @@ public class Student extends Human {
                         continue;
                     }
 
+                    studentResult.first();
                     while (studentResult.next()) {
-                        int facultyId = studentResult.getInt("faculty");
+                        int facultyId = studentResult.getInt("faculty_id");
                         int studentId = studentResult.getInt("id");
                         if (studentId == chosenStudentId) {
-                            setId(studentId);
-                            setFacultyId(facultyId);
+                            id = studentId;
+                            this.facultyId = facultyId;
                             fillEntity();
                         }
                     }

@@ -20,6 +20,6 @@ public class DeleteLevel extends Command {
     public void execute() {
         Menu menu = new Menu();
         Menu.levelUp();
-        menu.showMenu(secondLevel, "_".repeat(40));
+        menu.showMenu(secondLevel, "Удаление данных");
     }
 }
