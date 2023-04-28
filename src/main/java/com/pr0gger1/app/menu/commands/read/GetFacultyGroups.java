@@ -2,7 +2,7 @@ package com.pr0gger1.app.menu.commands.read;
 
 import com.pr0gger1.app.ConsoleTable.Table;
 import com.pr0gger1.app.entities.Faculty;
-import com.pr0gger1.exceptions.CancelIOException;
+import com.pr0gger1.exceptions.CancelInputException;
 import com.pr0gger1.app.menu.commands.Command;
 import com.pr0gger1.database.Database;
 
@@ -30,7 +30,7 @@ public class GetFacultyGroups extends Command {
             groupTable.fillTable(groupQueryResult);
             System.out.println(groupTable);
         }
-        catch (SQLException | CancelIOException error) {
+        catch (SQLException | CancelInputException error) {
             error.printStackTrace();
         }
     }

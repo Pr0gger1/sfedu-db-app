@@ -5,7 +5,7 @@ import com.pr0gger1.app.entities.Faculty;
 import com.pr0gger1.app.menu.commands.Command;
 import com.pr0gger1.database.DataTables;
 import com.pr0gger1.database.Database;
-import com.pr0gger1.exceptions.CancelIOException;
+import com.pr0gger1.exceptions.CancelInputException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -41,7 +41,7 @@ public class GetSubjects extends Command {
             subjectsTable.fillTable(subjectQueryResult);
             System.out.println(subjectsTable);
         }
-        catch (SQLException | CancelIOException error) {
+        catch (SQLException | CancelInputException error) {
             error.printStackTrace();
         }
     }

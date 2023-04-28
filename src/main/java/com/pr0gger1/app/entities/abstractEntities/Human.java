@@ -20,6 +20,10 @@ public abstract class Human extends Entity {
         super(table, query);
     }
 
+    public void setBirthday(LocalDate date) {
+        this.birthday = date;
+    }
+
     public void setBirthdayFromConsole() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Введите дату рождения (пример 12.01.1985): ");

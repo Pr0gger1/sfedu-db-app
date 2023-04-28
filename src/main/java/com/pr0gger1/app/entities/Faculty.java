@@ -3,6 +3,8 @@ package com.pr0gger1.app.entities;
 import com.pr0gger1.app.entities.abstractEntities.Entity;
 import com.pr0gger1.database.DataTables;
 import com.pr0gger1.database.Database;
+import com.pr0gger1.exceptions.CancelInputException;
+import com.pr0gger1.exceptions.InvalidIDException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,7 +23,7 @@ public class Faculty extends Entity {
     public Faculty(int facultyId) {
         super(DataTables.FACULTIES, new ArrayList<>(Arrays.asList("id", "faculty_name")));
         setLocalizedColumns(new ArrayList<>(Arrays.asList(
-            "ID", "Название факультета", "Адрес", "Номер телефона", "Email"
+            "Название факультета", "Адрес", "Номер телефона", "Email"
         )));
 
         this.id = facultyId;
@@ -30,7 +32,7 @@ public class Faculty extends Entity {
     public Faculty() {
         super(DataTables.FACULTIES, new ArrayList<>(Arrays.asList("id", "faculty_name")));
         setLocalizedColumns(new ArrayList<>(Arrays.asList(
-            "ID", "Название факультета", "Адрес", "Номер телефона", "Email"
+            "Название факультета", "Адрес", "Номер телефона", "Email"
         )));
     }
 
@@ -66,12 +68,12 @@ public class Faculty extends Entity {
         this.facultyName = facultyName;
     }
 
-    public void setFacultyNameFromConsole() {
+    public void setFacultyDataFromConsole() throws CancelInputException {
         System.out.print("Введите название факультета или 0 для выхода: ");
         facultyName = scanner.nextLine();
-    }
 
-    public void setFacultyDataFromConsole() {
+        if (facultyName.equals("0")) throw new CancelInputException("Отменен ввод");
+
         System.out.print("Введите адрес факультета: ");
         setAddress(scanner.nextLine());
 
@@ -85,29 +87,33 @@ public class Faculty extends Entity {
 
     @Override
     public void fillEntity() {
-        String facultyDataQuery = String.format("SELECT * FROM %s WHERE id = %d", DataTables.FACULTIES, id);
         try {
-            ResultSet data = Database.getData(facultyDataQuery);
+            if (id == 0) throw new InvalidIDException("Неверный ID");
+            String query = String.format(
+                "SELECT * FROM %s WHERE id = %d",
+                DataTables.FACULTIES, id
+            );
+
+            ResultSet data = Database.getData(query);
 
             while (data.next()) {
-                facultyName = data.getString("faculty_name");
-                address = data.getString("address");
-                email = data.getString("email");
-                phone = data.getLong("phone");
+                if (facultyName == null)
+                    facultyName = data.getString("faculty_name");
+                if (address == null)
+                    address = data.getString("address");
+                if (email == null)
+                    email = data.getString("email");
+                if (phone == 0)
+                    phone = data.getLong("phone");
             }
         }
-        catch (SQLException error) {
+        catch (SQLException | InvalidIDException error) {
             error.printStackTrace();
         }
     }
 
-    public void updateData() {
+    public void updateData() throws CancelInputException {
         ArrayList<Runnable> setters = new ArrayList<>(Arrays.asList(
-            () -> {
-                System.out.print("Введите ID: ");
-                setId(scanner.nextInt());
-                scanner.nextLine();
-            },
             () -> {
                 System.out.print("Введите новое название факультета: ");
                 setFacultyName(scanner.nextLine());

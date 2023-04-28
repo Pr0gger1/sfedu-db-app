@@ -2,7 +2,7 @@ package com.pr0gger1.app.menu.commands.read;
 
 import com.pr0gger1.app.ConsoleTable.Table;
 import com.pr0gger1.app.entities.Faculty;
-import com.pr0gger1.exceptions.CancelIOException;
+import com.pr0gger1.exceptions.CancelInputException;
 import com.pr0gger1.app.menu.commands.Command;
 import com.pr0gger1.database.DataTables;
 import com.pr0gger1.database.Database;
@@ -55,7 +55,7 @@ public class GetFacultyStudents extends Command {
         catch (SQLException error) {
             error.printStackTrace();
         }
-        catch (CancelIOException cancelException) {
+        catch (CancelInputException cancelException) {
             System.out.println(cancelException.getMessage());
         }
     }

@@ -55,8 +55,8 @@ public class Menu {
                 }
 
                 // Ввод команды
-                int menuValue;
-                menuValue = scanner.nextInt();
+                int menuValue = scanner.nextInt();
+                scanner.nextLine();
 
                 if (menuValue == 0) {
                     if (level > 1)

@@ -1,7 +1,8 @@
 package com.pr0gger1.app.entities.abstractEntities;
 
 import com.pr0gger1.app.ConsoleTable.Table;
-import com.pr0gger1.exceptions.CancelIOException;
+import com.pr0gger1.exceptions.CancelInputException;
+import com.pr0gger1.exceptions.InvalidArgument;
 import com.pr0gger1.exceptions.TooManyRowsException;
 import com.pr0gger1.database.DataTables;
 import com.pr0gger1.database.Database;
@@ -80,7 +81,7 @@ public abstract class Entity {
         this.localizedColumns = localizedColumns;
     }
 
-    public void setIdFromConsole() throws CancelIOException {
+    public void setIdFromConsole() throws CancelInputException {
         if (getEntityTable().getRowsCount() == 0) {
             System.out.println("В базе данных отсутствуют данные");
             return;
@@ -101,14 +102,20 @@ public abstract class Entity {
             id = scanner.nextInt();
             scanner.nextLine();
 
-            if (id == 0) throw new CancelIOException("Отменен ввод данных");
+            if (id == 0) throw new CancelInputException("Отменен ввод данных");
             else if (!getEntityTable().fieldExists(id)) System.out.println("Неверный ID");
             else break;
         }
     }
 
     public void setId(int id) {
-        this.id = id;
+        try {
+            if (id < 1) throw new InvalidArgument("ID не может быть меньше 1");
+            this.id = id;
+        }
+        catch (InvalidArgument iaError) {
+            iaError.printStackTrace();
+        }
     }
 
     public int getId() {
@@ -116,7 +123,11 @@ public abstract class Entity {
     }
 
     public void fillEntity() {}
-    public void updateData(ArrayList<Runnable> setters) {
+    public void fillEntity(int id) {}
+
+    public void fillEntityFromConsole() {}
+
+    public void updateData(ArrayList<Runnable> otherSetters) throws CancelInputException {
         System.out.println("Какие данные желаете изменить?");
         for (int i = 0; i < getLocalizedColumns().size(); i++) {
             if (i == 0) System.out.printf("%d. Выход%n", i);
@@ -126,7 +137,7 @@ public abstract class Entity {
         int chosenPoint = scanner.nextInt();
         scanner.nextLine();
 
-        if (chosenPoint == 0) return;
-        setters.get(chosenPoint - 1).run();
+        if (chosenPoint == 0) throw new CancelInputException("Отменен ввод");
+        otherSetters.get(chosenPoint - 1).run();
     }
 }

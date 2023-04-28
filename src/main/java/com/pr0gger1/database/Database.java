@@ -86,9 +86,9 @@ public class Database {
      * @param student объект класса Student
      */
     public static void createStudent(Student student) throws SQLException {
-        String query = "INSERT INTO students VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-
+        String query = "INSERT INTO %s VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         int columnIndex = 0;
+        query = String.format(query, DataTables.STUDENTS.getTable());
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(++columnIndex, getMaxId(DataTables.STUDENTS));
@@ -105,12 +105,12 @@ public class Database {
     }
 
     public static void updateStudent(Student student) throws SQLException {
-        String query = "UPDATE students SET" +
+        String query = "UPDATE %s SET" +
             " full_name = ?, course = ?, " +
             "direction_id = ?, faculty_id = ?," +
             "birthday = ?, scholarship = ?, phone = ? WHERE id = ?";
-
         int columnIndex = 0;
+        query = String.format(query, DataTables.STUDENTS.getTable());
 
         try(PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(++columnIndex, student.getFullName());
@@ -127,8 +127,10 @@ public class Database {
     }
 
     public static void createMark(Mark mark) throws SQLException {
-        String query = "INSERT INTO marks VALUES(?, ?, ?, ?, ?)";
+        String query = "INSERT INTO %s VALUES(?, ?, ?, ?, ?)";
         int columnIndex = 0;
+
+        query = String.format(query, DataTables.MARKS.getTable());
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(++columnIndex, getMaxId(DataTables.MARKS));
@@ -146,8 +148,10 @@ public class Database {
      * @param employee объект класса Employee
      */
     public static void createEmployee(Employee employee) throws SQLException {
-        String query = "INSERT INTO ? VALUES(?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO %s VALUES(?, ?, ?, ?, ?, ?, ?)";
         int columnIndex = 0;
+
+        query = String.format(query, DataTables.EMPLOYEES.getTable());
 
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -165,15 +169,15 @@ public class Database {
     }
 
     public static void updateEmployee(Employee employee) throws SQLException {
-        String query = "UPDATE ? SET " +
+        String query = "UPDATE %s SET " +
             "full_name = ?, salary = ?," +
             "specialization = ?, faculty_id = ?," +
             "birthday = ?, phone = ? WHERE id = ?";
 
+        query = String.format(query, DataTables.EMPLOYEES.getTable());
         int columnIndex = 0;
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(++columnIndex, DataTables.EMPLOYEES.getTable());
             statement.setString(++columnIndex, employee.getFullName());
             statement.setFloat(++columnIndex, employee.getSalary());
             statement.setString(++columnIndex, employee.getSpecialization());
@@ -191,8 +195,9 @@ public class Database {
      * @param group объект класса Group
      */
     public static void createGroup(StudentsGroup group) throws SQLException {
-        String query = "INSERT INTO groups VALUES(?, ?, ?)";
+        String query = "INSERT INTO %s VALUES(?, ?, ?)";
         int columnIndex = 0;
+        query = String.format(query, DataTables.GROUPS.getTable());
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(++columnIndex, getMaxId(DataTables.GROUPS));
@@ -204,8 +209,9 @@ public class Database {
     }
 
     public static void updateGroup(StudentsGroup group) throws SQLException {
-        String query = "UPDATE groups SET faculty_id = ?, group_name = ? WHERE id = ?";
+        String query = "UPDATE %s SET faculty_id = ?, group_name = ? WHERE id = ?";
         int columnIndex = 0;
+        query = String.format(query, DataTables.GROUPS.getTable());
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(++columnIndex, group.getFacultyId());
@@ -221,9 +227,9 @@ public class Database {
      * @param faculty объект класса Faculty
      */
     public static void createFaculty(Faculty faculty) throws SQLException {
-        String query = "INSERT INTO faculties VALUES (?, ?, ?, ?, ?)";
-
+        String query = "INSERT INTO %s VALUES (?, ?, ?, ?, ?)";
         int columnIndex = 0;
+        query = String.format(query, DataTables.FACULTIES.getTable());
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(++columnIndex, getMaxId(DataTables.FACULTIES));
@@ -237,11 +243,11 @@ public class Database {
     }
 
     public static void updateFaculty(Faculty faculty) throws SQLException {
-        String query = "UPDATE faculties SET " +
+        String query = "UPDATE %s SET " +
             "faculty_name = ?, address = ?," +
             "phone = ?, email = ? WHERE id = ?";
-
         int columnIndex = 0;
+        query = String.format(query, DataTables.FACULTIES.getTable());
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(++columnIndex, faculty.getFacultyName());
@@ -255,8 +261,9 @@ public class Database {
     }
 
     public static void createDirection(Direction direction) throws SQLException {
-        String query = "INSERT INTO directions VALUES(?, ?, ?, ?)";
+        String query = "INSERT INTO %s VALUES(?, ?, ?, ?)";
         int columnIndex = 0;
+        query = String.format(query, DataTables.DIRECTIONS.getTable());
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(++columnIndex, getMaxId(DataTables.DIRECTIONS));
@@ -269,10 +276,11 @@ public class Database {
     }
 
     public static void updateDirection(Direction direction) throws SQLException {
-        String query = "UPDATE directions SET " +
+        String query = "UPDATE %s SET " +
             "faculty_id = ?, direction_name = ?," +
             "head = ? WHERE id = ?";
         int columnIndex = 0;
+        query = String.format(query, DataTables.DIRECTIONS.getTable());
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(++columnIndex, direction.getFacultyId());
@@ -285,8 +293,9 @@ public class Database {
     }
 
     public static void createSubject(Subject subject) throws SQLException {
-        String query = "INSERT INTO subjects VALUES(?, ?, ?, ?, ?)";
+        String query = "INSERT INTO %s VALUES(?, ?, ?, ?, ?)";
         int columnIndex = 0;
+        query = String.format(query, DataTables.SUBJECTS.getTable());
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(++columnIndex, getMaxId(DataTables.SUBJECTS));
@@ -299,12 +308,12 @@ public class Database {
         }
     }
 
-    public void updateSubject(Subject subject) throws SQLException {
-        String query = "UPDATE subjects SET " +
+    public static void updateSubject(Subject subject) throws SQLException {
+        String query = "UPDATE %s SET " +
             "subject_name = ?, faculty_id = ?," +
             "direction_id = ?, employee_id = ? WHERE id = ?";
-
         int columnIndex = 0;
+        query = String.format(query, DataTables.SUBJECTS.getTable());
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(++columnIndex, subject.getSubjectName());

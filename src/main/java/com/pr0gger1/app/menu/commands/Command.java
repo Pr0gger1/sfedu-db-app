@@ -1,7 +1,9 @@
 package com.pr0gger1.app.menu.commands;
 
+import java.util.Scanner;
+
 public abstract class Command {
-    private String title = "";
+    private final String title;
     private final int id;
 
     protected Command(int id, String title) {
@@ -15,6 +17,22 @@ public abstract class Command {
     }
     public int getId() {
         return this.id;
+    }
+
+    protected boolean continueCommand() {
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("Продолжить?");
+            System.out.println("0. Нет");
+            System.out.println("1. Да");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            if (choice == 1) return true;
+            else if (choice == 0) return false;
+        }
     }
 
 }

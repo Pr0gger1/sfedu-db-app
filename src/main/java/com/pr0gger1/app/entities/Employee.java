@@ -2,8 +2,11 @@ package com.pr0gger1.app.entities;
 
 import com.pr0gger1.app.entities.abstractEntities.Human;
 import com.pr0gger1.database.DataTables;
-import com.pr0gger1.exceptions.CancelIOException;
+import com.pr0gger1.database.Database;
+import com.pr0gger1.exceptions.CancelInputException;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -28,10 +31,19 @@ public class Employee extends Human {
             )
         );
         this.facultyId = facultyId;
+
+        setLocalizedColumns(new ArrayList<>(Arrays.asList(
+            "ФИО сотрудника", "Зарплата", "Специальность",
+            "Факультет", "Дата рождения", "Номер телефона"
+        )));
     }
 
     public Employee() {
         super(DataTables.EMPLOYEES, new ArrayList<>(Arrays.asList("id", "full_name")));
+        setLocalizedColumns(new ArrayList<>(Arrays.asList(
+            "ФИО сотрудника", "Зарплата", "Специальность",
+            "Факультет", "Дата рождения", "Номер телефона"
+        )));
     }
 
     public int getFacultyId() {
@@ -92,17 +104,68 @@ public class Employee extends Human {
         scanner.nextLine();
     }
 
-    @Override
-    public void setIdFromConsole() throws CancelIOException {
-        setCurrentQuery(
-            String.format(
-                "SELECT id, full_name FROM %s " +
-                "WHERE id NOT IN (SELECT s.employee_id FROM directions d JOIN subjects s ON d.head != s.employee_id) " +
-                "AND faculty_id = (SELECT faculty_id FROM directions WHERE faculty_id = %d)",
-                DataTables.EMPLOYEES.getTable(), facultyId
+    public void updateData() throws CancelInputException {
+        ArrayList<Runnable> setters = new ArrayList<>(
+            Arrays.asList(
+                () -> {
+                    System.out.print("Введите ФИО: ");
+                    fullName = scanner.nextLine();
+                },
+                () -> {
+                    System.out.print("Введите зарплату: ");
+                    salary = scanner.nextFloat();
+                },
+                () -> {
+                    System.out.print("Введите специальность: ");
+                    specialization = scanner.nextLine();
+                },
+                () -> {
+                    Faculty newFaculty = new Faculty();
+                    try {
+                        newFaculty.setIdFromConsole();
+                        facultyId = newFaculty.getId();
+                    }
+                    catch (CancelInputException e) {
+                        System.out.println(e.getMessage());
+                    }
+                },
+                this::setBirthdayFromConsole,
+                () -> {
+                    System.out.print("Введите номер телефона: ");
+                    phone = scanner.nextLong();
+                }
             )
         );
-        super.setIdFromConsole();
+        super.updateData(setters);
+    }
+
+    @Override
+    public void fillEntity() {
+        String query = String.format(
+            "SELECT * FROM %s WHERE id = %d",
+            DataTables.EMPLOYEES.getTable(), id
+        );
+
+        try {
+            ResultSet data = Database.getData(query);
+            while (data.next()) {
+                if (fullName == null)
+                    fullName = data.getString("full_name");
+                if (salary == 0)
+                    salary = data.getFloat("salary");
+                if (specialization == null)
+                    specialization = data.getString("specialization");
+                if (facultyId == 0)
+                    facultyId = data.getInt("faculty_id");
+                if (birthday == null)
+                    birthday = data.getDate("birthday").toLocalDate();
+                if (phone == 0)
+                    phone = data.getLong("phone");
+            }
+        }
+        catch (SQLException error) {
+            error.printStackTrace();
+        }
     }
 
     @Override

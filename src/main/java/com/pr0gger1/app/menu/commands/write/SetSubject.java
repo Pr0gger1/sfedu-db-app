@@ -6,7 +6,7 @@ import com.pr0gger1.app.entities.Subject;
 import com.pr0gger1.app.entities.Employee;
 import com.pr0gger1.app.menu.commands.Command;
 import com.pr0gger1.database.Database;
-import com.pr0gger1.exceptions.CancelIOException;
+import com.pr0gger1.exceptions.CancelInputException;
 
 import java.sql.SQLException;
 
@@ -28,12 +28,6 @@ public class SetSubject extends Command {
                 try {
                     faculty.setIdFromConsole();
                     chosenFacultyId = faculty.getId();
-
-                    if (chosenFacultyId == 0) return;
-                    if (!faculty.getEntityTable().fieldExists(chosenFacultyId)) {
-                        System.out.println("Неверный ID");
-                        continue;
-                    }
 
                     Direction direction = new Direction(chosenFacultyId);
                     direction.setIdFromConsole();
@@ -58,7 +52,7 @@ public class SetSubject extends Command {
                         error.printStackTrace();
                     }
                 }
-                catch (CancelIOException cancelException) {
+                catch (CancelInputException cancelException) {
                     System.out.println(cancelException.getMessage());
                     return;
                 }

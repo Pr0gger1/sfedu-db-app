@@ -1,6 +1,13 @@
 package com.pr0gger1.app.menu.commands.update;
 
+import com.pr0gger1.app.entities.Faculty;
+import com.pr0gger1.app.entities.StudentsGroup;
 import com.pr0gger1.app.menu.commands.Command;
+import com.pr0gger1.database.DataTables;
+import com.pr0gger1.database.Database;
+import com.pr0gger1.exceptions.CancelInputException;
+
+import java.sql.SQLException;
 
 public class UpdateStudentGroup extends Command {
     public UpdateStudentGroup(int id, String title) {
@@ -9,6 +16,28 @@ public class UpdateStudentGroup extends Command {
 
     @Override
     public void execute() {
+        StudentsGroup group = new StudentsGroup();
+        Faculty faculty = new Faculty();
+        try {
+            faculty.setIdFromConsole();
 
+            group.setCurrentQuery(String.format(
+                "SELECT * FROM %s WHERE faculty_id = %d",
+                    DataTables.GROUPS.getTable(), faculty.getId()
+            ));
+
+            group.setIdFromConsole();
+            group.fillEntity();
+            group.updateData();
+
+            Database.updateGroup(group);
+            System.out.println("Данные успешно обновлены");
+        }
+        catch (SQLException error) {
+            error.printStackTrace();
+        }
+        catch (CancelInputException cancelInput) {
+            System.out.println(cancelInput.getMessage());
+        }
     }
 }
