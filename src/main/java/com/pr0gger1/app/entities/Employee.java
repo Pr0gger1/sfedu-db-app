@@ -4,6 +4,7 @@ import com.pr0gger1.app.entities.abstractEntities.Human;
 import com.pr0gger1.database.DataTables;
 import com.pr0gger1.database.Database;
 import com.pr0gger1.exceptions.CancelInputException;
+import com.pr0gger1.exceptions.NoDataException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,10 +25,10 @@ public class Employee extends Human {
         super(
             DataTables.EMPLOYEES,
             String.format(
-                "SELECT id, full_name FROM %s" +
-                " WHERE id NOT IN (SELECT head FROM %s)" +
-                " AND faculty_id = (SELECT faculty_id FROM directions WHERE faculty_id = %d)",
-                    DataTables.EMPLOYEES, DataTables.DIRECTIONS, facultyId
+                "SELECT id, full_name FROM %s " +
+                "WHERE id NOT IN (SELECT head FROM %s) " +
+                "AND faculty_id = (SELECT DISTINCT faculty_id FROM directions WHERE faculty_id = %d)",
+                DataTables.EMPLOYEES.getTable(), DataTables.DIRECTIONS.getTable(), facultyId
             )
         );
         this.facultyId = facultyId;
@@ -125,7 +126,7 @@ public class Employee extends Human {
                         newFaculty.setIdFromConsole();
                         facultyId = newFaculty.getId();
                     }
-                    catch (CancelInputException e) {
+                    catch (CancelInputException | NoDataException e) {
                         System.out.println(e.getMessage());
                     }
                 },

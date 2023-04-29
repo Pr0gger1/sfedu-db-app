@@ -4,10 +4,7 @@ import com.pr0gger1.app.ConsoleTable.Table;
 import com.pr0gger1.app.entities.abstractEntities.Human;
 import com.pr0gger1.database.DataTables;
 import com.pr0gger1.database.Database;
-import com.pr0gger1.exceptions.CancelInputException;
-import com.pr0gger1.exceptions.InvalidArgument;
-import com.pr0gger1.exceptions.InvalidIDException;
-import com.pr0gger1.exceptions.TooManyRowsException;
+import com.pr0gger1.exceptions.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,13 +25,17 @@ public class Student extends Human {
     public Student() {
         super(DataTables.STUDENTS, new ArrayList<>(Arrays.asList("id", "full_name")));
         setLocalizedColumns(new ArrayList<>(Arrays.asList(
-            "ID", "ФИО", "Курс", "Направление подготовки", "Факультет",
+            "ФИО", "Курс", "Направление подготовки", "Факультет",
             "Дата рождения", "Стипендия", "Номер телефона"
         )));
     }
 
     public Student(int directionId, int facultyId) {
         super(DataTables.STUDENTS, new ArrayList<>(Arrays.asList("id", "full_name")));
+        setLocalizedColumns(new ArrayList<>(Arrays.asList(
+            "ФИО", "Курс", "Направление подготовки", "Факультет",
+            "Дата рождения", "Стипендия", "Номер телефона"
+        )));
         this.directionId = directionId;
         this.facultyId = facultyId;
     }
@@ -128,13 +129,20 @@ public class Student extends Human {
             );
             ResultSet data = Database.getData(query);
             while (data.next()) {
-                fullName = data.getString("full_name");
-                course = data.getShort("course");
-                directionId = data.getInt("direction_id");
-                facultyId = data.getInt("faculty_id");
-                birthday = data.getDate("birthday").toLocalDate();
-                scholarship = data.getFloat("scholarship");
-                phone = data.getLong("phone");
+                if (fullName == null)
+                    fullName = data.getString("full_name");
+                if (course == 0)
+                    course = data.getShort("course");
+                if (directionId == 0)
+                    directionId = data.getInt("direction_id");
+                if (facultyId == 0)
+                    facultyId = data.getInt("faculty_id");
+                if (birthday == null)
+                    birthday = data.getDate("birthday").toLocalDate();
+                if (scholarship == 0)
+                    scholarship = data.getFloat("scholarship");
+                if (phone == 0)
+                    phone = data.getLong("phone");
             }
         }
         catch (SQLException | InvalidIDException error) {
@@ -145,11 +153,6 @@ public class Student extends Human {
     public void updateData() throws CancelInputException {
         ArrayList<Runnable> setters = new ArrayList<>(
             Arrays.asList(
-                () -> {
-                    System.out.print("Введите ID");
-                    id = scanner.nextInt();
-                    scanner.nextLine();
-                },
                 () -> {
                     System.out.print("Введите ФИО студента: ");
                     fullName = scanner.nextLine();
@@ -171,7 +174,7 @@ public class Student extends Human {
                         newDirection.setIdFromConsole();
                         directionId = newDirection.getId();
                     }
-                    catch (CancelInputException error) {
+                    catch (CancelInputException | NoDataException error) {
                         error.printStackTrace();
                     }
                 },
@@ -194,7 +197,7 @@ public class Student extends Human {
                         newDirection.setIdFromConsole();
                         directionId = newDirection.getId();
                     }
-                    catch (CancelInputException error) {
+                    catch (CancelInputException | NoDataException error) {
                         error.printStackTrace();
                     }
                 },
@@ -238,7 +241,7 @@ public class Student extends Human {
                 if (studentName.equals("0")) throw new CancelInputException("Отменен ввод данных");
 
                 String query = String.format(
-                    "SELECT s.id, full_name, course, d.id as direction_id, direction_name, f.id as faculty_id, faculty_name, scholarship, s.phone " +
+                    "SELECT s.id, full_name, course, d.id as direction_id, direction_name, f.id as faculty, faculty_name, scholarship, s.phone " +
                     "FROM %s s JOIN %s d ON s.direction_id = d.id JOIN %s f ON s.faculty_id = f.id " +
                     "WHERE full_name LIKE '%%%s%%'",
                     DataTables.STUDENTS.getTable(),
@@ -273,7 +276,7 @@ public class Student extends Human {
 
                     studentResult.first();
                     while (studentResult.next()) {
-                        int facultyId = studentResult.getInt("faculty_id");
+                        int facultyId = studentResult.getInt("faculty");
                         int studentId = studentResult.getInt("id");
                         if (studentId == chosenStudentId) {
                             id = studentId;

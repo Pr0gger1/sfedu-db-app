@@ -7,7 +7,7 @@ public class ReadLevel extends Command {
     private final Command[] secondLevel = {
         new GetFaculties(1, "Список факультетов"),
         new GetFacultyStudents(2, "Список студентов факультета"),
-        new GetFacultyTeachers(3, "Список преподавателей факультета"),
+        new GetFacultyEmployeers(3, "Список сотрудников факультета"),
         new GetFacultyGroups(4,"Список групп факультета"),
         new GetAllDirections(5,"Список всех направлений обучения"),
         new GetSubjects(6, "Список всех предметов факультета"),

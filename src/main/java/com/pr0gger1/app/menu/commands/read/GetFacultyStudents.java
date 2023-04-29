@@ -6,6 +6,7 @@ import com.pr0gger1.exceptions.CancelInputException;
 import com.pr0gger1.app.menu.commands.Command;
 import com.pr0gger1.database.DataTables;
 import com.pr0gger1.database.Database;
+import com.pr0gger1.exceptions.NoDataException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -55,8 +56,8 @@ public class GetFacultyStudents extends Command {
         catch (SQLException error) {
             error.printStackTrace();
         }
-        catch (CancelInputException cancelException) {
-            System.out.println(cancelException.getMessage());
+        catch (CancelInputException | NoDataException error) {
+            System.out.println(error.getMessage());
         }
     }
 }

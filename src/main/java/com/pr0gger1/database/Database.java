@@ -132,6 +132,20 @@ public class Database {
         }
     }
 
+    public static void updateMark(Mark mark) throws SQLException {
+        String query = "UPDATE %s SET student_id = ?, subject_id = ?, mark = ?, year = ?";
+        int columnIndex = 0;
+        query = String.format(query, DataTables.MARKS.getTable());
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(++columnIndex, mark.getStudentId());
+            statement.setInt(++columnIndex, mark.getSubjectId());
+            statement.setShort(++columnIndex, mark.getMark());
+            statement.setShort(++columnIndex, mark.getYear());
+            statement.executeUpdate();
+        }
+    }
+
     /**
      *
      * @param employee объект класса Employee
@@ -144,7 +158,6 @@ public class Database {
 
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(++columnIndex, DataTables.EMPLOYEES.getTable());
             statement.setInt(++columnIndex, getMaxId(DataTables.EMPLOYEES));
             statement.setString(++columnIndex, employee.getFullName());
             statement.setFloat(++columnIndex, employee.getSalary());
@@ -354,33 +367,6 @@ public class Database {
         );
 
         return statement.executeQuery();
-    }
-
-    /**
-     *
-     * @param tableName имя таблицы, к которой направляется запрос
-     * @param columns строка колонок, значения которых должны быть удалены
-     * @param condition условие, по которому должно/ы быть удалено/ы поле/я
-     */
-    public static void deleteRow(String tableName, String columns, String condition) throws SQLException {
-        String query = String.format("DELETE %s FROM %s %s", columns, tableName, condition);
-
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.executeUpdate();
-        }
-    }
-
-    /**
-     * @param tableName имя таблицы, к которой направляется запрос
-     * @param columns массив строк колонок, значения которых должны быть удалены
-     * @param condition условие, по которому должно/ы быть удалено/ы поле/я
-     */
-    public static void deleteRow(String tableName, String[] columns, String condition) throws SQLException {
-        String query = String.format("DELETE %s FROM %s %s", String.join(", ", columns), tableName, condition);
-
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.executeUpdate();
-        }
     }
 
     public static Table getFormedTable(ResultSet queryResult) throws SQLException, TooManyRowsException {

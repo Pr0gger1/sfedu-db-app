@@ -6,12 +6,13 @@ import com.pr0gger1.exceptions.CancelInputException;
 import com.pr0gger1.app.entities.Subject;
 import com.pr0gger1.app.menu.commands.Command;
 import com.pr0gger1.database.Database;
+import com.pr0gger1.exceptions.NoDataException;
 
 import java.sql.SQLException;
 
 public class SetMark extends Command {
     private final Mark mark = new Mark();
-    private final Student currentStudent = new Student();
+    private final Student student = new Student();
 
     public SetMark(int commandId, String title) {
         super(commandId, title);
@@ -19,16 +20,16 @@ public class SetMark extends Command {
 
     @Override
     public void execute() {
-        if (currentStudent.getEntityTable().getRowsCount() > 0) {
+        if (student.getEntityTable().getRowsCount() > 0) {
             while (true) {
                 try {
-                    currentStudent.searchStudent();
-                    mark.setStudentId(currentStudent.getId());
+                    student.searchStudent();
+                    mark.setStudentId(student.getId());
 
                     boolean isChosen = false;
 
                     while (!isChosen) {
-                        int facultyId = currentStudent.getFacultyId();
+                        int facultyId = student.getFacultyId();
                         Subject subject = new Subject(facultyId);
                         subject.setCurrentQuery(
                             String.format(
@@ -52,8 +53,8 @@ public class SetMark extends Command {
                     System.out.println("Данные успешно добавлены");
                 }
                 catch (SQLException error) {error.printStackTrace();}
-                catch (CancelInputException cancelError) {
-                    System.out.println(cancelError.getMessage());
+                catch (CancelInputException | NoDataException error) {
+                    System.out.println(error.getMessage());
                     return;
                 }
             }

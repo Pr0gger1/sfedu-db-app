@@ -7,6 +7,7 @@ import com.pr0gger1.app.entities.Employee;
 import com.pr0gger1.app.menu.commands.Command;
 import com.pr0gger1.database.Database;
 import com.pr0gger1.exceptions.CancelInputException;
+import com.pr0gger1.exceptions.NoDataException;
 
 import java.sql.SQLException;
 
@@ -52,8 +53,8 @@ public class SetSubject extends Command {
                         error.printStackTrace();
                     }
                 }
-                catch (CancelInputException cancelException) {
-                    System.out.println(cancelException.getMessage());
+                catch (CancelInputException | NoDataException error) {
+                    System.out.println(error.getMessage());
                     return;
                 }
             }

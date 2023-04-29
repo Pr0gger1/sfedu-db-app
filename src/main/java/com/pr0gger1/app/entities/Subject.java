@@ -5,6 +5,7 @@ import com.pr0gger1.database.DataTables;
 import com.pr0gger1.database.Database;
 import com.pr0gger1.exceptions.CancelInputException;
 import com.pr0gger1.exceptions.InvalidIDException;
+import com.pr0gger1.exceptions.NoDataException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -139,7 +140,7 @@ public class Subject extends Entity {
                     employee.setIdFromConsole();
                     teacherId = employee.getId();
                 }
-                catch (CancelInputException e) {
+                catch (CancelInputException | NoDataException e) {
                     System.out.println(e.getMessage());
                 }
             },
@@ -155,7 +156,7 @@ public class Subject extends Entity {
                     direction.setIdFromConsole();
                     directionId = direction.getId();
                 }
-                catch (CancelInputException e) {
+                catch (CancelInputException | NoDataException e) {
                     System.out.println(e.getMessage());
                 }
             },
@@ -165,7 +166,7 @@ public class Subject extends Entity {
                     employee.setIdFromConsole();
                     teacherId = employee.getId();
                 }
-                catch (CancelInputException e) {
+                catch (CancelInputException | NoDataException e) {
                     System.out.println(e.getMessage());
                 }
             }

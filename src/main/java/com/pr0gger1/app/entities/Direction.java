@@ -5,6 +5,7 @@ import com.pr0gger1.database.DataTables;
 import com.pr0gger1.database.Database;
 import com.pr0gger1.exceptions.CancelInputException;
 import com.pr0gger1.exceptions.InvalidIDException;
+import com.pr0gger1.exceptions.NoDataException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -123,7 +124,7 @@ public class Direction extends Entity {
                     newHead.setIdFromConsole();
                     headOfDirectionId = newHead.getId();
                 }
-                catch (CancelInputException error) {
+                catch (CancelInputException | NoDataException error) {
                     System.out.println(error.getMessage());
                 }
             },
@@ -137,7 +138,7 @@ public class Direction extends Entity {
                     newEmployee.setIdFromConsole();
                     headOfDirectionId = newEmployee.getId();
                 }
-                catch (CancelInputException e) {
+                catch (CancelInputException | NoDataException e) {
                     System.out.println(e.getMessage());
                 }
             }

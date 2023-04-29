@@ -6,6 +6,7 @@ import com.pr0gger1.app.menu.commands.Command;
 import com.pr0gger1.database.DataTables;
 import com.pr0gger1.database.Database;
 import com.pr0gger1.exceptions.CancelInputException;
+import com.pr0gger1.exceptions.NoDataException;
 
 import java.sql.SQLException;
 
@@ -36,8 +37,8 @@ public class UpdateStudentGroup extends Command {
         catch (SQLException error) {
             error.printStackTrace();
         }
-        catch (CancelInputException cancelInput) {
-            System.out.println(cancelInput.getMessage());
+        catch (CancelInputException | NoDataException error) {
+            System.out.println(error.getMessage());
         }
     }
 }

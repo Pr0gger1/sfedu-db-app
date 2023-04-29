@@ -3,6 +3,7 @@ package com.pr0gger1.app.entities.abstractEntities;
 import com.pr0gger1.app.ConsoleTable.Table;
 import com.pr0gger1.exceptions.CancelInputException;
 import com.pr0gger1.exceptions.InvalidArgument;
+import com.pr0gger1.exceptions.NoDataException;
 import com.pr0gger1.exceptions.TooManyRowsException;
 import com.pr0gger1.database.DataTables;
 import com.pr0gger1.database.Database;
@@ -81,10 +82,10 @@ public abstract class Entity {
         this.localizedColumns = localizedColumns;
     }
 
-    public void setIdFromConsole() throws CancelInputException {
+    public void setIdFromConsole() throws CancelInputException, NoDataException {
         if (getEntityTable().getRowsCount() == 0) {
             System.out.println("В базе данных отсутствуют данные");
-            return;
+            throw new NoDataException("Нет данных");
         }
         while (true) {
             printEntityTable();
@@ -123,8 +124,6 @@ public abstract class Entity {
     }
 
     public void fillEntity() {}
-    public void fillEntity(int id) {}
-
     public void fillEntityFromConsole() {}
 
     public void updateData(ArrayList<Runnable> otherSetters) throws CancelInputException {

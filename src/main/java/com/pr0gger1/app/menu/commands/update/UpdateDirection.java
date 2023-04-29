@@ -4,6 +4,7 @@ import com.pr0gger1.app.entities.Direction;
 import com.pr0gger1.app.menu.commands.Command;
 import com.pr0gger1.database.Database;
 import com.pr0gger1.exceptions.CancelInputException;
+import com.pr0gger1.exceptions.NoDataException;
 
 import java.sql.SQLException;
 
@@ -27,8 +28,8 @@ public class UpdateDirection extends Command {
         catch (SQLException error) {
             error.printStackTrace();
         }
-        catch (CancelInputException e) {
-            System.out.println(e.getMessage());
+        catch (CancelInputException | NoDataException error) {
+            System.out.println(error.getMessage());
         }
     }
 }

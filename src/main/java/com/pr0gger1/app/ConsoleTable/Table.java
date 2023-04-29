@@ -177,11 +177,15 @@ public class Table {
             ResultSetMetaData entityMetaData = queryResult.getMetaData();
             int columnCount = entityMetaData.getColumnCount();
 
+            if (columns.size() == 0) {
+                for (int i = 1; i <= columnCount; i++)
+                    addColumn(entityMetaData.getColumnName(i));
+            }
+
             while (queryResult.next()) {
                 ArrayList<Object> row = new ArrayList<>();
-                for (int i = 1; i <= columnCount; i++) {
+                for (int i = 1; i <= columnCount; i++)
                     row.add(queryResult.getObject(i));
-                }
 
                 addRow(row);
             }

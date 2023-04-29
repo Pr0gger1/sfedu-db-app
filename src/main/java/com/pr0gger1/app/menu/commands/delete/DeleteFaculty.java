@@ -4,6 +4,7 @@ import com.pr0gger1.app.entities.Faculty;
 import com.pr0gger1.app.menu.commands.Command;
 import com.pr0gger1.database.Database;
 import com.pr0gger1.exceptions.CancelInputException;
+import com.pr0gger1.exceptions.NoDataException;
 
 import java.sql.SQLException;
 
@@ -23,8 +24,8 @@ public class DeleteFaculty extends Command {
         catch (SQLException error) {
             error.printStackTrace();
         }
-        catch (CancelInputException cancelInput) {
-            System.out.println(cancelInput.getMessage());
+        catch (CancelInputException | NoDataException error) {
+            System.out.println(error.getMessage());
         }
     }
 }

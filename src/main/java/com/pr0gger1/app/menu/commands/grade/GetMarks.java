@@ -7,6 +7,7 @@ import com.pr0gger1.app.entities.Student;
 import com.pr0gger1.app.menu.commands.Command;
 import com.pr0gger1.database.DataTables;
 import com.pr0gger1.exceptions.CancelInputException;
+import com.pr0gger1.exceptions.NoDataException;
 
 public class GetMarks extends Command {
     public GetMarks(int commandId, String title) {
@@ -44,7 +45,7 @@ public class GetMarks extends Command {
                 else System.out.println(markTable);
                 if (!continueCommand()) return;
 
-            } catch (CancelInputException e) {
+            } catch (CancelInputException | NoDataException e) {
                 System.out.println(e.getMessage());
                 return;
             }

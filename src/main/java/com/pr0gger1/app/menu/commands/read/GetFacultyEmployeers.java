@@ -7,15 +7,16 @@ import com.pr0gger1.exceptions.CancelInputException;
 import com.pr0gger1.app.menu.commands.Command;
 import com.pr0gger1.database.DataTables;
 import com.pr0gger1.database.Database;
+import com.pr0gger1.exceptions.NoDataException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class GetFacultyTeachers extends Command {
+public class GetFacultyEmployeers extends Command {
 
-    public GetFacultyTeachers(int id, String title) {
+    public GetFacultyEmployeers(int id, String title) {
         super(id, title);
     }
 
@@ -57,8 +58,8 @@ public class GetFacultyTeachers extends Command {
         catch (SQLException error) {
             error.printStackTrace();
         }
-        catch (CancelInputException cancelException) {
-            System.out.println(cancelException.getMessage());
+        catch (CancelInputException | NoDataException error) {
+            System.out.println(error.getMessage());
         }
     }
 }

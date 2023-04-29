@@ -5,6 +5,7 @@ import com.pr0gger1.database.DataTables;
 import com.pr0gger1.database.Database;
 import com.pr0gger1.exceptions.CancelInputException;
 import com.pr0gger1.exceptions.InvalidIDException;
+import com.pr0gger1.exceptions.NoDataException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -70,8 +71,8 @@ public class StudentGroup extends Entity {
                         facultyId = faculty.getId();
                         updateGroupName.run();
                     }
-                    catch (CancelInputException e) {
-                        System.out.println(e.getMessage());
+                    catch (CancelInputException | NoDataException error) {
+                        System.out.println(error.getMessage());
                     }
                 },
                 updateGroupName
