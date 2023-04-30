@@ -21,15 +21,11 @@ public class AverageMarkBySubject extends Command {
     public void execute() {
         Table avgGradeTable = new Table("Предмет", "Направление подготовки", "Средний балл");
         Faculty faculty = new Faculty();
-        Direction direction = new Direction();
 
         try {
             faculty.setIdFromConsole();
 
-            direction.setCurrentQuery(String.format(
-                "SELECT * FROM %s WHERE faculty_id = %d",
-                    DataTables.DIRECTIONS.getTable(), faculty.getId()
-            ));
+            Direction direction = new Direction(faculty.getId());
             direction.setIdFromConsole();
 
             String subjectQuery = String.format(

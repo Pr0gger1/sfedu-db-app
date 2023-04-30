@@ -3,6 +3,8 @@ package com.pr0gger1.app.ConsoleTable;
 import com.pr0gger1.exceptions.TooManyColumnsException;
 import com.pr0gger1.exceptions.TooManyRowsException;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -184,8 +186,14 @@ public class Table {
 
             while (queryResult.next()) {
                 ArrayList<Object> row = new ArrayList<>();
-                for (int i = 1; i <= columnCount; i++)
-                    row.add(queryResult.getObject(i));
+                for (int i = 1; i <= columnCount; i++) {
+                    Object obj = queryResult.getObject(i);
+
+                     if (obj instanceof BigDecimal) {
+                        BigDecimal value = (BigDecimal) obj;
+                        row.add(value.setScale(2, RoundingMode.HALF_UP));
+                    } else row.add(obj);
+                }
 
                 addRow(row);
             }
